@@ -4,7 +4,8 @@ default['ftb_server']['packages'] = %W( openjdk#{node['ftb_server']['openjdk_ver
 default['ftb_server']['install_base'] = 'Server'
 default['ftb_server']['addon_dir'] = '.Addon'
 
-## auto-restart server? weekday is either nil for daily or valid cron syntax, like: 1, 1-5, */2, etc
+## auto-restart server? Generally a good idea to do this once in a while to keep performance up
+## and to minimize probems like memory leaks, unresponsive server, etc
 default['ftb_server']['auto_restart']['enable'] = false
 ## Hash in the form: { minute: '0', hour: '5', day: '*', month: '*', weekday: '*' } where '*' is the default can be left out
 ## of the hash
