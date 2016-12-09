@@ -70,13 +70,17 @@ Add `ftb_server::default` to your Nodes run list
 
 Add this recipe to your run list and set the needed attributes to get going
 
-### ftb_server::install_pack
+### ftb_server::prepare
+
+Creates base dirs/files
+
+### ftb_server::install
 
 Gets the pack going
 
-### ftb_server::mods
+### ftb_server::auto_restart
 
-Loops through the ftb_server attribute hash to find all mod_-Mods and installs them, if do_setup is true
+Creates a cronjob that restarts the server periodically, if enable is true
 
 ### ftb_server::mod_dynmap
 

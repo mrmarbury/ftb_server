@@ -1,6 +1,6 @@
 #
-# Cookbook Name:: ftb_server
-# Recipe:: default
+# Cookbook:: ftb_server
+# Spec:: default
 #
 # Copyright:: 2016, Stefan Wendler
 #
@@ -15,22 +15,19 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-## Default Recipe
-#
-
-# unless node['ftb_server']['installed']['pack'] == node['ftb_server']['pack']['name'] &&
-#     node['ftb_server']['installed']['version'] == node['ftb_server']['pack']['version']
-  include_recipe 'ftb_server::install'
-# end
-
-# ruby_block 'set_version_and_pack_after_successful_install' do
-#   block do
-#     node.set['ftb_server']['installed']['version'] = node['ftb_server']['pack']['version']
-#     node.set['ftb_server']['installed']['pack'] = node['ftb_server']['pack']['name']
-#   end
-# end
 
 
+require 'spec_helper'
 
+describe 'ftb_server::auto_restart' do
+  context 'When all attributes are default, on an unspecified platform' do
+    let(:chef_run) do
+      runner = ChefSpec::ServerRunner.new
+      runner.converge(described_recipe)
+    end
 
+    it 'converges successfully' do
+      expect { chef_run }.to_not raise_error
+    end
+  end
+end

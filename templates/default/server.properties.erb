@@ -1,0 +1,44 @@
+######################
+## Managed by Chef! ##
+######################
+spawn-protection=<%= @spawn_protection %>
+max-tick-time=<%= @max_tick_time %>
+generator-settings=<%= @generator_settings%>
+force-gamemode=<%= @force_gamemode %>
+allow-nether=<%= @allow_nether %>
+gamemode=<%= @gamemode %>
+broadcast-console-to-ops=<%= @broadcast_console_to_ops %>
+enable-query=<%= @enable_query %>
+player-idle-timeout=<%= @player_idle_timeout %>
+difficulty=<%= @difficulty %>
+spawn-monsters=<%= @spawn_monsters %>
+op-permission-level=<%= @op_permission_level %>
+announce-player-achievements=<%= @announce_player_achievements %>
+pvp=<%= @pvp %>
+snooper-enabled=<%= @snooper_enabled %>
+level-type=<%= @level_type %>
+hardcore=<%= @hardcore %>
+enable-command-block=<%= @enable_command_block %>
+max-players=<%= @max_players %>
+network-compression-threshold=<%= @network_compression_threashold %>
+resource-pack-sha1=<%= @resource_pack_sha1 %>
+max-world-size=<%= @max_world_size %>
+server-port=<%= @server_port %>
+texture-pack=<%= @texture_pack %>
+server-ip=<%= @server_ip %>
+spawn-npcs=<%= @spawn_npcs %>
+allow-flight=<%= @allow_flight %>
+level-name=<%= @level_name %>
+view-distance=<%= @view_distance %>
+resource-pack=<%= @resource_pack %>
+spawn-animals=<%= @spawn_animals %>
+white-list=<%= @whire_list %>
+generate-structures=<%= @generate_structures %>
+online-mode=<%= @online_mode %>
+max-build-height=<%= @max_build_height %>
+level-seed=<%= @leve_seed %>
+motd=<%= @motd %>
+enable-rcon=<%= @enable_rcon %>
+<% @additional_options.each do |k,v| %>
+    <%= k %>=<%= v %>
+<% end %>

@@ -1,0 +1,106 @@
+#!/bin/sh
+#
+# PROVIDE: ftbserver
+# REQUIRE: LOGIN
+# KEYWORD: shutdown
+
+. /etc/rc.subr
+
+name="ftbserver"
+rcvar=ftbserver_enable
+
+load_rc_config $name
+
+extra_commands="clean killworld"
+start_cmd="${name}_start"
+stop_cmd="${name}_stop"
+clean_cmd="${name}_clean"
+killworld_cmd="${name}_killworld"
+
+ftb_server_home=<%= @ftb_server_home %>
+ftb_server_name=<%= @ftb_server_name%>
+ftb_user=<%= @ftb_user %>
+ftb_world_name=<%= @ftb_world_name %>
+
+eval "${rcvar}=\${${rcvar}:-'NO'}"
+
+ftbserver_start()
+{
+if [ -e ${ftb_server_home}/ftb_server.lck ]; then
+        echo "Server already running."
+else
+        echo "Starting ${ftb_server_name}..."
+        cd ${ftb_server_home}
+        /usr/bin/su ${ftb_user} -c "/usr/local/bin/tmux new-session -d -s ftbserver \"./ServerStart.sh\""
+        touch ${ftb_server_home}/ftb_server.lck
+
+        i=0
+        while [ $i -lt 15 ]; do
+                i=$(($i + 1))
+                if [ -e ${ftb_server_home}/ftb_server.lck ]; then
+                        echo "${ftb_server_name} running."
+                        break
+                else
+                        sleep 1
+                fi
+        done
+
+        if [ $i -ge 10 ]; then
+                echo "ERROR: Server could not be started."
+                /usr/bin/su ${ftb_user} -c "/usr/local/bin/tmux kill-session -t ftbserver"
+        fi
+fi
+}
+
+ftbserver_stop(){
+if [ -e ${ftb_server_home}/ftb_server.lck ]; then
+        echo "Halting ${ftb_server_name}."
+        /usr/bin/su ${ftb_user} -c "/usr/local/bin/tmux send -t ftbserver:0.0 stop \"Enter\" && rm -f ${ftb_server_home}/ftb_server.lck"
+
+
+        i=0
+        while [ $i -lt 15 ]; do
+        i=$(($i + 1))
+            if [ -e ${ftb_server_home}/ftb_server.lck ]; then
+                        sleep 1
+            else
+            echo "${ftb_server_name} halted."
+            break
+            fi
+        done
+
+        if [ $i -ge 10 ];then
+                echo "ERROR: Server could not be halted."
+        fi
+else
+        echo "${ftb_server_name} not running."
+fi
+}
+
+ftbserver_clean(){
+        echo "Giving a stop to the server..."
+        ftbserver_stop
+        echo "Cleaning..."
+        if [ -e ${ftb_server_home}/ftb_server.lck ]; then
+                rm ${ftb_server_home}/ftb_server.lck
+                echo "Cleaning done."
+        else
+                echo "Nothing to do. No unclean sessions."
+        fi
+}
+
+ftbserver_killworld(){
+        echo "Trying to delete World"
+        if [ -e ${ftb_server_home}/ftb_server.lck ]; then
+                echo "Server seems to be running. Stop server before deletion."
+        else
+                rm -rf ${ftb_server_home}/${ftb_level_name}
+                if [ -d ${ftb_server_home}/${ftb_level_name} ]; then
+                        echo "ERROR: World could not be deleted"
+                else
+                        echo "World deleted. Next serverstart will generate a new one"
+                fi
+        fi
+}
+
+run_rc_command "$1"
