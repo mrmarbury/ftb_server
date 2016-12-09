@@ -6,7 +6,7 @@ default['ftb_server']['addon_dir'] = '.Addon'
 
 ## auto-restart server? weekday is either nil for daily or valid cron syntax, like: 1, 1-5, */2, etc
 default['ftb_server']['auto_restart']['enable'] = false
-## Has in the form: { minute: '0', hour: '5', day: '*', month: '*', weekday: '*' } where '*' is the default can be left out
+## Hash in the form: { minute: '0', hour: '5', day: '*', month: '*', weekday: '*' } where '*' is the default can be left out
 ## of the hash
 default['ftb_server']['auto_restart']['time'] = { minute: '0', hour: '5' }
 
