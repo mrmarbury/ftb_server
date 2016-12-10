@@ -11,11 +11,10 @@ rcvar=ftbserver_enable
 
 load_rc_config $name
 
-extra_commands="clean killworld"
+extra_commands="clean"
 start_cmd="${name}_start"
 stop_cmd="${name}_stop"
 clean_cmd="${name}_clean"
-killworld_cmd="${name}_killworld"
 
 ftb_server_home=<%= @ftb_server_home %>
 ftb_server_name=<%= @ftb_server_name%>
@@ -86,20 +85,6 @@ ftbserver_clean(){
                 echo "Cleaning done."
         else
                 echo "Nothing to do. No unclean sessions."
-        fi
-}
-
-ftbserver_killworld(){
-        echo "Trying to delete World"
-        if [ -e ${ftb_server_home}/ftb_server.lck ]; then
-                echo "Server seems to be running. Stop server before deletion."
-        else
-                rm -rf ${ftb_server_home}/${ftb_level_name}
-                if [ -d ${ftb_server_home}/${ftb_level_name} ]; then
-                        echo "ERROR: World could not be deleted"
-                else
-                        echo "World deleted. Next serverstart will generate a new one"
-                fi
         fi
 }
 
