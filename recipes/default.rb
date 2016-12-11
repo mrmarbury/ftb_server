@@ -19,10 +19,9 @@
 ## Default Recipe
 #
 
-# unless node['ftb_server']['installed']['pack'] == node['ftb_server']['pack']['name'] &&
-#     node['ftb_server']['installed']['version'] == node['ftb_server']['pack']['version']
-  include_recipe 'ftb_server::install'
-# end
+chef_gem 'json'
+
+include_recipe 'ftb_server::install'
 
 # ruby_block 'set_version_and_pack_after_successful_install' do
 #   block do

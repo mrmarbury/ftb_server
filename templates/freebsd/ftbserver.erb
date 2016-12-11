@@ -31,7 +31,7 @@ if [ -e ${ftb_server_home}/ftb_server.lck ]; then
 else
         echo "Starting ${ftb_server_name}..."
         cd ${ftb_server_home}
-        /usr/bin/su ${ftb_user} -c "/usr/local/bin/tmux new-session -d -s ftbserver \"./ServerStart.sh\""
+        /usr/bin/su ${ftb_user} -c "/usr/local/bin/tmux new-session -d -s ftbserver \"./ServerStart.sh\"" || exit 5
         touch ${ftb_server_home}/ftb_server.lck
 
         i=0
@@ -48,6 +48,7 @@ else
         if [ $i -ge 10 ]; then
                 echo "ERROR: Server could not be started."
                 /usr/bin/su ${ftb_user} -c "/usr/local/bin/tmux kill-session -t ftbserver"
+                exit 10
         fi
 fi
 }
@@ -71,6 +72,7 @@ if [ -e ${ftb_server_home}/ftb_server.lck ]; then
 
         if [ $i -ge 10 ];then
                 echo "ERROR: Server could not be halted."
+                exit 20
         fi
 else
         echo "${ftb_server_name} not running."

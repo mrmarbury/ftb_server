@@ -19,7 +19,7 @@ platforms:
        - [".", "/vagrant", "disabled: true"]
       customize:
         cpus: 2
-        memory: 2048
+        memory: 5120
 
 suites:
   - name: default

@@ -62,7 +62,23 @@ Condition for the steps might be: version does not match (maybe check for Server
 
 ## Usage
 
+### Standalone
 Add `ftb_server::default` to your Nodes run list
+
+### In a wrapper-cookbook
+
+```ruby
+node['ftb_server']['addon_config']['files'].each do |file|
+  cookbook_file ::File.join(node['ftb_server']['addon_config']['dir'], file) do
+    source file
+    owner node['ftb_server']['user']['name']
+    group node['ftb_server']['user']['group']
+    mode '644'
+  end
+end
+
+include_recipe 'ftb_server::default'
+```
 
 ## Recipes
 
