@@ -6,9 +6,9 @@ default['ftb_server']['addon_dir'] = '.Addon'
 
 ## auto-restart server? Generally a good idea to do this once in a while to keep performance up
 ## and to minimize probems like memory leaks, unresponsive server, etc
-default['ftb_server']['auto_restart']['enable'] = false
-## Hash in the form: { minute: '0', hour: '5', day: '*', month: '*', weekday: '*' } where '*' is the default can be left out
-## of the hash
+default['ftb_server']['auto_restart']['enable'] = true
+## Hash in the form: { minute: '0', hour: '5', day: '*', month: '*', weekday: '*' } where '*' is the default and can be
+## left out of the hash
 default['ftb_server']['auto_restart']['time'] = { minute: '0', hour: '5' }
 
 default['ftb_server']['user']['name'] = 'ftb'
@@ -16,8 +16,6 @@ default['ftb_server']['user']['group'] = 'ftb'
 default['ftb_server']['user']['shell'] = '/bin/sh'
 default['ftb_server']['user']['home'] = '/usr/local/ftb'
 
-# Directory that contains files that you want to manage in combination with the ftb server
-default['ftb_server']['addon_config']['dir'] = '/usr/local/ftb/.FTB_Addon'
 # Every file in this array will be symlinked to the FTB dir
 default['ftb_server']['addon_config']['files'] = %w( whitelist.json ops.json banned-ips.json banned-players.json )
 
@@ -86,8 +84,8 @@ default['ftb_server']['server_properties']['additional_options'] = {}
 
 ## http://ftb.cursecdn.com/FTB2/modpacks/FTBInfinityLite110/1_3_3/FTBInfinityLite110Server.zip
 default['ftb_server']['pack']['base_url'] = 'http://ftb.cursecdn.com/FTB2/modpacks'
-default['ftb_server']['pack']['name'] = 'FTBInfinityLite110'
-default['ftb_server']['pack']['version'] = '1.3.2'
+default['ftb_server']['pack']['name'] = nil
+default['ftb_server']['pack']['version'] = nil
 
 default['ftb_server']['start_server'] = true
 
@@ -97,3 +95,7 @@ default['ftb_server']['mod_dynmap']['jar_url'] = 'http://addons.curse.cursecdn.c
 ## Set by Cookbook. Do NOT edit!
 default['ftb_server']['installed']['pack'] = nil
 default['ftb_server']['installed']['version'] = nil
+
+## Don't change these attributes!
+default['ftb_server']['pack_base_dir'] = ::File.join node['ftb_server']['user']['home'], node['ftb_server']['pack']['name']
+default['ftb_server']['pack_addon_dir'] = ::File.join node['ftb_server']['pack_base_dir'], node['ftb_server']['addon_dir']

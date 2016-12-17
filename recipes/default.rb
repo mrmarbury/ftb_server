@@ -23,12 +23,12 @@ chef_gem 'json'
 
 include_recipe 'ftb_server::install'
 
-# ruby_block 'set_version_and_pack_after_successful_install' do
-#   block do
-#     node.set['ftb_server']['installed']['version'] = node['ftb_server']['pack']['version']
-#     node.set['ftb_server']['installed']['pack'] = node['ftb_server']['pack']['name']
-#   end
-# end
+ruby_block 'set_version_and_pack_info' do
+  block do
+    node.set['ftb_server']['installed']['version'] = node['ftb_server']['pack']['version']
+    node.set['ftb_server']['installed']['pack'] = node['ftb_server']['pack']['name']
+  end
+end
 
 
 

@@ -28,16 +28,15 @@ ftb_home = node['ftb_server']['user']['home']
 install_base = node['ftb_server']['install_base']
 
 pack_name = node['ftb_server']['pack']['name']
-pack_base_dir = ::File.join(ftb_home, pack_name)
+
+pack_base_dir = node['ftb_server']['pack_base_dir']
+pack_addon_dir = node['ftb_server']['pack_addon_dir']
 
 pack_version = node['ftb_server']['pack']['version']
 pack_version_dir = "#{install_base}.#{pack_version}"
 
 pack_version_server_dir = ::File.join pack_base_dir, pack_version_dir
 pack_server_link_dir = ::File.join pack_base_dir, install_base
-pack_addon_dir = ::File.join pack_base_dir, node['ftb_server']['addon_dir']
-
-addon_config_dir = node['ftb_server']['addon_config']['dir']
 
 level_name = node['ftb_server']['server_properties']['level_name']
 init_script = '/usr/local/etc/rc.d/ftbserver'
@@ -55,25 +54,19 @@ user ftb_user do
   action :nothing
 end.run_action :create
 
-directory addon_config_dir do
-  owner ftb_user
-  group ftb_group
-  mode '750'
-  action :nothing
-end.run_action :create
-## END of compile time resources ##
-
-node['ftb_server']['packages'].each do |pkg|
-  package pkg
-end
-
 [pack_version_server_dir, pack_addon_dir].each do |pdir|
   directory pdir do
     owner ftb_user
     group ftb_group
     recursive true
     mode '750'
-  end
+  end.run_action :create
+end
+
+## END of compile time resources ##
+
+node['ftb_server']['packages'].each do |pkg|
+  package pkg
 end
 
 execute 'send_stop_to_ftb_server_before_pack_update' do
@@ -208,7 +201,7 @@ template ::File.join pack_version_server_dir, 'settings-local.sh' do
 end
 
 node['ftb_server']['addon_config']['files'].each do |file|
-  afile = ::File.join node['ftb_server']['addon_config']['dir'], file
+  afile = ::File.join pack_addon_dir, file
   link ::File.join pack_version_server_dir, file do
     to afile
     only_if { ::File.exists? afile }
