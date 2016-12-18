@@ -25,7 +25,7 @@ default['ftb_server']['eula']['do_accept'] = true
 default['ftb_server']['settings_local_sh']['java_cmd'] = 'java'
 default['ftb_server']['settings_local_sh']['xms'] = '2G'
 default['ftb_server']['settings_local_sh']['xmx'] = '5G'
-default['ftb_server']['settings_local_sh']['permgem_size'] = '256M'
+default['ftb_server']['settings_local_sh']['permgen_size'] = '256M'
 default['ftb_server']['settings_local_sh']['java_parameters'] = %w(
                                                                     -XX:+UseParNewGC
                                                                     -XX:+CMSIncrementalPacing
