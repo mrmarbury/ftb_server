@@ -11,10 +11,11 @@ rcvar=ftbserver_enable
 
 load_rc_config $name
 
-extra_commands="clean"
+extra_commands="clean restart"
 start_cmd="${name}_start"
 stop_cmd="${name}_stop"
 clean_cmd="${name}_clean"
+restart_cmd="${name}_restart"
 
 ftb_server_home=<%= @ftb_server_home %>
 ftb_server_name=<%= @ftb_server_name%>
@@ -88,6 +89,14 @@ ftbserver_clean(){
         else
                 echo "Nothing to do. No unclean sessions."
         fi
+}
+
+ftbserver_restart() {
+        ftbserver_stop
+        sleep 5
+        ftbserver_clean
+        sleep 1
+        ftbserver_start
 }
 
 run_rc_command "$1"

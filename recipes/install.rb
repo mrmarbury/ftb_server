@@ -131,6 +131,7 @@ end
 
 # Minecraft will escape characters like !, = etc in the motd so we might as well escape them here to prevent rewrite
 # of the config with every chef run (see motd)
+## INFO: No notifies restart on change here since server.properties is quite instable since Minecraft changes this file alot!!
 template ::File.join pack_version_server_dir, 'server.properties' do
   source 'server.properties.erb'
   user ftb_user
@@ -198,6 +199,7 @@ template ::File.join pack_version_server_dir, 'settings-local.sh' do
       permgen_size: node['ftb_server']['settings_local_sh']['permgen_size'],
       java_parameters: java_parameters
   )
+  notifies :restart, 'service[ftbserver]', :delayed
 end
 
 node['ftb_server']['addon_config']['files'].each do |file|

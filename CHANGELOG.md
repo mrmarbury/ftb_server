@@ -13,3 +13,8 @@
 # 0.8.1
 
  - Fixed typo in settings-local.sh 
+ 
+# 0.8.2
+
+ - Added explicit restart to rc-script
+ - notifies restart on settings-local.sh changes
