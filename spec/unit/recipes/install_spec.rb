@@ -24,8 +24,21 @@ describe 'ftb_server::install' do
       runner = ChefSpec::ServerRunner.new(platform: 'freebsd', version: '10.3') do |node|
         node.automatic['ftb_server']['pack']['name'] = 'FTBInfinityLite110'
         node.automatic['ftb_server']['pack']['version'] = '1.3.3'
+        node.automatic['ipaddress'] = '127.0.0.1'
+        node.override['ftb_server']['server_properties']['generator_settings'] = 'gensetting'
+        node.override['ftb_server']['server_properties']['resource_pack_sha1'] = '123456'
+        node.override['ftb_server']['server_properties']['texture_pack'] = 'texture_pack'
+        node.override['ftb_server']['server_properties']['resource_pack'] = 'resource_pack'
+        node.override['ftb_server']['server_properties']['additional_options'] = { 'my-var' => '123', 'my-var-2' => '456'}
       end
       runner.converge(described_recipe)
+    end
+
+    before :each do
+      allow(::File).to receive(:exists?).and_call_original
+      %w( whitelist.json ops.json banned-ips.json banned-players.json ).each do |addon_file|
+        allow(::File).to receive(:exists?).with("/usr/local/ftb/FTBInfinityLite110/.Addon/#{addon_file}").and_return true
+      end
     end
 
     it 'converges successfully' do
@@ -102,6 +115,102 @@ describe 'ftb_server::install' do
               strip_components: 0
           )
       )
+    end
+
+    it 'creates the eula.txt file' do
+      expect(chef_run).to create_template('/usr/local/ftb/FTBInfinityLite110/Server.1.3.3/eula.txt').with(
+          source: 'eula.txt.erb',
+          user: 'ftb',
+          group: 'ftb',
+          mode: '644',
+          variables: ({
+              accept_eula: true
+          })
+      )
+    end
+
+    it 'creates the server.properties file' do
+      expect(chef_run).to create_template('/usr/local/ftb/FTBInfinityLite110/Server.1.3.3/server.properties').with(
+          source: 'server.properties.erb',
+          user: 'ftb',
+          group: 'ftb',
+          mode: '644',
+          variables: ({
+              spawn_protection: 16,
+              max_tick_time: 60000,
+              generator_settings: 'gensetting',
+              force_gamemode: true,
+              allow_nether: true,
+              gamemode: 0,
+              broadcast_console_to_ops: true,
+              enable_query: false,
+              player_idle_timeout: 0,
+              difficulty: 1,
+              spawn_monsters: true,
+              op_permission_level: 4,
+              announce_player_achievements: true,
+              pvp: true,
+              snooper_enabled: true,
+              level_type: 'BIOMESOP',
+              hardcore: false,
+              enable_command_block: false,
+              max_players: 20,
+              network_compression_threshold: 256,
+              resource_pack_sha1: '123456',
+              max_world_size: 29999984,
+              server_port: 25565,
+              texture_pack: 'texture_pack',
+              server_ip: '127.0.0.1',
+              spawn_npcs: true,
+              allow_flight: true,
+              level_name: 'world',
+              view_distance: 12,
+              resource_pack: 'resource_pack',
+              spawn_animals: true,
+              white_list: true,
+              generate_structures: true,
+              online_mode: true,
+              max_build_height: 256,
+              level_seed: '2323115871908605002',
+              motd: 'v1.3.3 - FTBInfinityLite110 -\=- Be nice to each other\! NO griefing\!\!',
+              enable_rcon: false,
+              additional_options: { 'my-var' => '123', 'my-var-2' => '456'}
+          })
+      )
+    end
+
+    it 'creates settings-local.sh file and notifies restart' do
+      expect(chef_run).to create_template('/usr/local/ftb/FTBInfinityLite110/Server.1.3.3/settings-local.sh').with(
+          source: 'settings-local.sh.erb',
+          user: 'ftb',
+          group: 'ftb',
+          mode: '750',
+          variables: ({
+              java_cmd: 'java',
+              xms: '2G',
+              xmx: '5G',
+              permgen_size: '256M',
+              java_parameters: '-XX:+UseParNewGC -XX:+CMSIncrementalPacing -XX:+CMSClassUnloadingEnabled -XX:ParallelGCThreads=2' \
+                               ' -XX:MinHeapFreeRatio=5 -XX:MaxHeapFreeRatio=10 -Dmfl.queryRestult=confirm'
+          })
+      )
+      expect(chef_run.template('/usr/local/ftb/FTBInfinityLite110/Server.1.3.3/settings-local.sh')).to notify('service[ftbserver]').to(:restart).delayed
+    end
+
+    %w( whitelist.json ops.json banned-ips.json banned-players.json ).each do |addon_file|
+      it "symlinks #{addon_file} to the server directory" do
+        expect(chef_run).to create_link("/usr/local/ftb/FTBInfinityLite110/Server.1.3.3/#{addon_file}")
+                                .with_to("/usr/local/ftb/FTBInfinityLite110/.Addon/#{addon_file}")
+      end
+    end
+
+    it 'Makes ServerStart.sh executable' do
+      expect(chef_run).to create_file('/usr/local/ftb/FTBInfinityLite110/Server.1.3.3/ServerStart.sh').with_mode '750'
+    end
+
+    it 'enables and starts ftbserver' do
+      expect(chef_run).to enable_service('ftbserver').with_supports(start: true, stop: true, restart: true)
+      expect(chef_run).to start_service('ftbserver').with_supports(start: true, stop: true, restart: true)
     end
   end
 end
