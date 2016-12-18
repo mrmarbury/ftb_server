@@ -245,6 +245,20 @@ Creates a cronjob that restarts the server periodically, if enable is true
 
 Installs and configures dynmap
 
+## How to Test
+
+# Specs
+
+Run command `rspec` from the root of this Cookbooks
+
+# Integration tests
+
+**INFO: Not Yet Implementred**
+
+ 1. Install Vagrant with berkshelf and testkitchen plugins
+ 1. Install VirtualBox and configure it according to your OS's documentation
+ 1. Run `kitchen verify`
+
 ## License and Authors
 
 Author: Stefan Wendler (<stefan@binarysun.de>)
