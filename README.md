@@ -2,7 +2,7 @@
 
 Chef Cookbook to manage a "Feed the Beast"-Server installation on FreeBSD.
 
-**INFO: The Recipes `auto_restart` and `mod_dynmap` are currently WIP and will be available in ASAP**
+**INFO: - The Recipes `auto_restart` and `mod_dynmap` are currently WIP and will be available in ASAP!**
 
 ## Requirements
 
@@ -23,8 +23,8 @@ Chef Cookbook to manage a "Feed the Beast"-Server installation on FreeBSD.
 The FTB-Server installation is devided into parts:
 
  1. The user/group and its home-dir
- 1. The FTB-Pack main directory and each version
- 1. The files/directories that contain world data, backup, and config that are symlinked into each version-dir
+ 2. The FTB-Pack main directory and each version
+ 3. The files/directories that contain world data, backup, and config that are symlinked into each version-dir
  
 An installed FTB-Server will have the following directory structure:
 
@@ -68,13 +68,6 @@ no technical purpose in this Cookbook.
  - `node['ftb_server']['install_base']` - Base directory name for an installation. Default: `'Server'`
  - `node['ftb_server']['addon_dir']` - Name of the directory that will contain all symlinked files. Default: `'.Addon'`
  - `node['ftb_server']['start_server']` - Whether to enable and start the server or not. Default: `true`
-
-### auto_restart-Recipe
-
- - `node['ftb_server']['auto_restart']['enable']` - It is a good idea to restart a Minecraft server in regular intervals. Setting this to `true` will create
-  a cronjob that does exactly this. Default: `true`
- - `node['ftb_server']['auto_restart']['time']` - The time at which the server gets restarted. Default: `{ minute: '0', hour: '5' }`. 
- See Chef's [cron](https://docs.chef.io/resource_cron.html) resource for more info.
 
 ### User/Group
 
@@ -173,13 +166,20 @@ values and a hint will be shown next to the attribute
 
  - `node['ftb_server']['mod_dynmap']['jar_url']` - URL to the Forge Version of the Dynmap jar-file. Default: `''`
  - `node['ftb_server']['mod_dynmap']['config'][<params>]` - Properties in the Dynmap config file (TBD)
+ 
+### auto_restart-Recipe
+
+ - `node['ftb_server']['auto_restart']['enable']` - It is a good idea to restart a Minecraft server in regular intervals. Setting this to `true` will create
+  a cronjob that does exactly this. Default: `true`
+ - `node['ftb_server']['auto_restart']['time']` - The time at which the server gets restarted. Default: `{ minute: '0', hour: '5' }`. 
+ See Chef's [cron](https://docs.chef.io/resource_cron.html) resource for more info.
 
 ## Usage
 
 ### Standalone
 
- 1. Add `ftb_server::default` to your Nodes run list 
- 1. Add pack name and version to your role/environment. Role-Example:
+ - Add `ftb_server::default` to your Nodes run list 
+ - Add pack name and version to your role/environment. Role-Example:
  
  ```ruby
  override_attributes({
@@ -194,8 +194,8 @@ values and a hint will be shown next to the attribute
  
 ### In a wrapper-cookbook with managed JSON-Files
 
- 1. Put your JSON-Files into the files-directory of your wrapper cookbook
- 1. Add the following to your wrapper Cookbooks `default.rb`
+ - Put your JSON-Files into the files-directory of your wrapper cookbook
+ - Add the following to your wrapper Cookbooks `default.rb`
 
 ```ruby
 node['ftb_server']['addon_config']['files'].each do |file|
@@ -210,7 +210,8 @@ end
 include_recipe 'ftb_server::default'
 ```
  
- 1. Add pack name and version to your role/environment. Role-Example:
+ - Add pack name and version to your role/environment. Role-Example:
+ 
      ```ruby
      override_attributes({
        "ftb_server" => {
@@ -235,11 +236,13 @@ Gets the pack going. Included in the Default-Recipe
 ### ftb_server::auto_restart
 
 **INFO: Not Yet Implemented**
+
 Creates a cronjob that restarts the server periodically, if enable is true
 
 ### ftb_server::mod_dynmap
 
 **INFO: Not Yet Implemented**
+
 Installs and configures dynmap
 
 ## License and Authors

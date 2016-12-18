@@ -19,9 +19,12 @@
 require 'spec_helper'
 
 describe 'ftb_server::default' do
-  context 'When all attributes are default, on an unspecified platform' do
+  context 'When all attributes are default' do
     let(:chef_run) do
-      runner = ChefSpec::ServerRunner.new
+      runner = ChefSpec::ServerRunner.new(platform: 'freebsd', version: '10.3') do |node|
+        node.automatic['ftb_server']['pack']['name'] = 'FTBInfinityLite110'
+        node.automatic['ftb_server']['pack']['version'] = '1.3.3'
+      end
       runner.converge(described_recipe)
     end
 

@@ -19,7 +19,9 @@
 ## Default Recipe
 #
 
-chef_gem 'json'
+chef_gem 'json' do
+  compile_time false
+end
 
 include_recipe 'ftb_server::install'
 
