@@ -95,14 +95,17 @@ no technical purpose in this Cookbook.
  - `node['ftb_server']['settings_local_sh']['xms']` - The Java XMS value. Default `'2G'`
  - `node['ftb_server']['settings_local_sh']['xmx']` - The Java XMX value. Default: `'5G'`
  - `node['ftb_server']['settings_local_sh']['permgen_size']` - Java's PermGen Size. Default: `'256M'`
- - `node['ftb_server']['settings_local_sh']['java_parameters']` - Array with Java parameters. Default: `%w(
-                                                                    -XX:+UseParNewGC
-                                                                    -XX:+CMSIncrementalPacing
-                                                                    -XX:+CMSClassUnloadingEnabled
-                                                                    -XX:ParallelGCThreads=2
-                                                                    -XX:MinHeapFreeRatio=5
-                                                                    -XX:MaxHeapFreeRatio=10
-                                                                  )`
+ - `node['ftb_server']['settings_local_sh']['java_parameters']` - Array with Java parameters. Default: 
+ ```
+ %w(
+    -XX:+UseParNewGC
+    -XX:+CMSIncrementalPacing
+    -XX:+CMSClassUnloadingEnabled
+    -XX:ParallelGCThreads=2
+    -XX:MinHeapFreeRatio=5
+    -XX:MaxHeapFreeRatio=10
+ )
+ ```
 ### FML-Confirm
 
  - `node['ftb_server']['fml']['add_confirm_option']` - Whether to confirm world/block-changes that might occur during server update. If this is `false` the server might not start and will wait for user interaction.

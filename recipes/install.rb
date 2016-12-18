@@ -195,7 +195,7 @@ template ::File.join pack_version_server_dir, 'settings-local.sh' do
       java_cmd: node['ftb_server']['settings_local_sh']['java_cmd'],
       xms: node['ftb_server']['settings_local_sh']['xms'],
       xmx: node['ftb_server']['settings_local_sh']['xmx'],
-      permgen_size: node['ftb_server']['settings_local_sh']['permgem_size'],
+      permgen_size: node['ftb_server']['settings_local_sh']['permgen_size'],
       java_parameters: java_parameters
   )
 end
