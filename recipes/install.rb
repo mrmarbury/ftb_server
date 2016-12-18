@@ -41,7 +41,7 @@ pack_server_link_dir = ::File.join pack_base_dir, install_base
 level_name = node['ftb_server']['server_properties']['level_name']
 init_script = '/usr/local/etc/rc.d/ftbserver'
 
-## These resources will be executed at compile time so in a wrapper .FTB_Addons is present when needed
+## These resources will be executed at compile time. So in a wrapper-Cookbook .Addons is present when needed
 group ftb_group do
   action :nothing
 end.run_action :create
@@ -217,7 +217,7 @@ file ::File.join(pack_version_server_dir, 'ServerStart.sh') do
 end
 
 service 'ftbserver' do
-  supports start: true, stop: true
+  supports start: true, stop: true, restart: true
   action [:enable, :start]
   only_if { node['ftb_server']['start_server'] }
 end
