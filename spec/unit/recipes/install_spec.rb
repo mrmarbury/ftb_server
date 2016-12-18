@@ -31,5 +31,77 @@ describe 'ftb_server::install' do
     it 'converges successfully' do
       expect { chef_run }.to_not raise_error
     end
+
+    it 'creates the system group at compile time' do
+      expect(chef_run).to create_group('ftb').at_compile_time
+    end
+
+    it 'creates the system user at compile time' do
+      expect(chef_run).to create_user('ftb').with(
+          group: 'ftb',
+          home: '/usr/local/ftb',
+          manage_home: true,
+          shell: '/bin/sh'
+      ).at_compile_time
+    end
+
+    %w( /usr/local/ftb/FTBInfinityLite110/Server.1.3.3 /usr/local/ftb/FTBInfinityLite110/.Addon ).each do |pdir|
+      it "creates #{pdir} at compile time" do
+        expect(chef_run).to create_directory(pdir).with(owner: 'ftb', group: 'ftb', recursive: true, mode: '750').at_compile_time
+      end
+    end
+
+    %w( openjdk8 tmux curl ).each do |pkg|
+      it "installs package #{pkg}" do
+        expect(chef_run).to install_package pkg
+      end
+    end
+
+    it 'creates the rc-script' do
+      expect(chef_run).to create_template('/usr/local/etc/rc.d/ftbserver').with(
+          user: 'root',
+          group: 'wheel',
+          mode: '555',
+          variables: ({
+              ftb_server_home: '/usr/local/ftb/FTBInfinityLite110/Server.1.3.3',
+              ftb_server_name: 'FTBInfinityLite110',
+              ftb_user: 'ftb',
+              ftb_world_name: 'world'
+          })
+      )
+    end
+
+    it 'creates symlink to the current version' do
+      expect(chef_run).to create_link('/usr/local/ftb/FTBInfinityLite110/Server')
+                              .with_to '/usr/local/ftb/FTBInfinityLite110/Server.1.3.3'
+    end
+
+    %w( world backups ).each do |dir|
+      it "creates Addon directory #{dir}" do
+        expect(chef_run).to create_directory('/usr/local/ftb/FTBInfinityLite110/.Addon/' + dir).with(
+            owner: 'ftb',
+            group: 'ftb',
+            recursive: true,
+            mode: '750'
+        )
+      end
+
+      it "creates symlink for dir #{dir}" do
+        expect(chef_run).to create_link('/usr/local/ftb/FTBInfinityLite110/Server.1.3.3/' + dir)
+                                .with_to('/usr/local/ftb/FTBInfinityLite110/.Addon/' + dir)
+      end
+    end
+
+    it 'downloads and extracts the FTB-Modpack' do
+      expect(chef_run).to(
+          unpack_poise_archive('http://ftb.cursecdn.com/FTB2/modpacks/FTBInfinityLite110/1_3_3/FTBInfinityLite110Server.zip').with(
+              destination: '/usr/local/ftb/FTBInfinityLite110/Server.1.3.3',
+              user: 'ftb',
+              group: 'ftb',
+              keep_existing: true,
+              strip_components: 0
+          )
+      )
+    end
   end
 end

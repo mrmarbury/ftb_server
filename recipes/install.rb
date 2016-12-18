@@ -60,6 +60,7 @@ end.run_action :create
     group ftb_group
     recursive true
     mode '750'
+    action :nothing
   end.run_action :create
 end
 

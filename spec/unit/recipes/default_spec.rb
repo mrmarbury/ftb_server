@@ -31,5 +31,19 @@ describe 'ftb_server::default' do
     it 'converges successfully' do
       expect { chef_run }.to_not raise_error
     end
+
+    it 'installs the json gem' do
+      expect(chef_run).to install_chef_gem('json').with(compile_time: false)
+    end
+
+    it 'includes the install recipe' do
+      expect(chef_run).to include_recipe 'ftb_server::install'
+    end
+
+    # This is okay for now since the values are informational only.
+    # I might change this later to really check the values before and after
+    it 'executes a ruby block that sets installed pack and version info' do
+      expect(chef_run).to run_ruby_block 'set_version_and_pack_info'
+    end
   end
 end
