@@ -18,3 +18,8 @@
 
  - Added explicit restart to rc-script
  - notifies restart on settings-local.sh changes
+
+# 0.8.3
+
+ - defaults-tests done
+ - smaller fixes
