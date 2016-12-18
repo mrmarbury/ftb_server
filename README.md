@@ -27,16 +27,17 @@ The FTB-Server installation is devided into parts:
  1. The files/directories that contain world data, backup, and config that are symlinked into each version-dir
  
 An installed FTB-Server will have the following directory structure:
+
 ```
 /usr/local/<user>/<pack>
-                       \_ Server.<version_a>
-                                           \_ installation_files/directories
-                                           \_ server.properties
-                                           \_ symliked files/directories from .Addon
-                       \_ Server.<version_b>
-                                           \_ installation_files/directories
-                                           \_ server.properties
-                                           \_ symliked files/directories from .Addon
+                       \_ Server.A.B.C
+                                     \_ installation_files/directories
+                                     \_ server.properties
+                                     \_ symliked files/directories from .Addon
+                       \_ Server.D.E.F
+                                     \_ installation_files/directories
+                                     \_ server.properties
+                                     \_ symliked files/directories from .Addon
                        \_ Server #symlink to current version_dir for informational purposes
                        \_ .Addon
                                \_ ops.json
@@ -49,9 +50,10 @@ An installed FTB-Server will have the following directory structure:
                                
 /usr/local/etc/rc.d/ftbserver
 ```
+
 The JSON-Files cannot be delivered easily as templates since they are updated through Minecraft. 
-So you will have to manage them yourself in a wrapping Cookbook (or similar - see *Usage* below) and put them into the .Addons-dir
-yourself. The Cookbook will then symlink these files to the current Server-directory. The world- and backups-directories will only
+So you will have to manage them yourself in a wrapping Cookbook (or similar - see **Usage** below) and put them into the `.Addon`-directory
+yourself. The Cookbook will then symlink these files to the current Server-directory. The `world`- and `backups`-directories will only
 be created and then symlinked. That way the current world and backups will be available with every version within the installed pack.
 For every new pack-version a new directory will be created that is called `Server.<version>` by default. And then a symlink named `Server`
 will be created that points to the currently active installation. This symlink is for informational purposes only since it serves
@@ -106,6 +108,7 @@ no technical purpose in this Cookbook.
     -XX:MaxHeapFreeRatio=10
  )
  ```
+ 
 ### FML-Confirm
 
  - `node['ftb_server']['fml']['add_confirm_option']` - Whether to confirm world/block-changes that might occur during server update. If this is `false` the server might not start and will wait for user interaction.
@@ -177,6 +180,7 @@ values and a hint will be shown next to the attribute
 
  1. Add `ftb_server::default` to your Nodes run list 
  1. Add pack name and version to your role/environment. Role-Example:
+ 
  ```ruby
  override_attributes({
    "ftb_server" => {
@@ -187,6 +191,7 @@ values and a hint will be shown next to the attribute
    }
  })
  ```
+ 
 ### In a wrapper-cookbook with managed JSON-Files
 
  1. Put your JSON-Files into the files-directory of your wrapper cookbook
