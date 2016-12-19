@@ -242,9 +242,7 @@ Gets the pack going. Included in the Default-Recipe
 
 ### ftb_server::auto_restart
 
-**INFO: Not Yet Implemented**
-
-Creates a cronjob that restarts the server periodically, if enable is true
+Creates a cronjob that restarts the server periodically, if `node['ftb_server']['auto_restart']['enable']` is true
 
 ### ftb_server::mod_dynmap
 
