@@ -18,8 +18,11 @@
 
  - Added explicit restart to rc-script
  - notifies restart on settings-local.sh changes
+ 
+# 0.9.0
 
-# 0.8.3
-
+ - auto_restart implemented
+ - Service can now be renamed
  - defaults-tests done
  - smaller fixes
+ - settings-local.sh notify removed for now

@@ -4,6 +4,9 @@ default['ftb_server']['packages'] = %W( openjdk#{node['ftb_server']['openjdk_ver
 default['ftb_server']['install_base'] = 'Server'
 default['ftb_server']['addon_dir'] = '.Addon'
 
+default['ftb_server']['rc_d']['name'] = 'ftbserver'
+default['ftb_server']['rc_d']['dir'] = '/usr/local/etc/rc.d'
+
 ## auto-restart server? Generally a good idea to do this once in a while to keep performance up
 ## and to minimize probems like memory leaks, unresponsive server, etc
 default['ftb_server']['auto_restart']['enable'] = true

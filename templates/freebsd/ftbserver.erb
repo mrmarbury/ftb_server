@@ -1,13 +1,13 @@
 #!/bin/sh
 #
-# PROVIDE: ftbserver
+# PROVIDE: <%= @ftb_name %>
 # REQUIRE: LOGIN
 # KEYWORD: shutdown
 
 . /etc/rc.subr
 
-name="ftbserver"
-rcvar=ftbserver_enable
+name="<%= @ftb_name %>"
+rcvar=<%= @ftb_name %>_enable
 
 load_rc_config $name
 
@@ -24,14 +24,14 @@ ftb_world_name=<%= @ftb_world_name %>
 
 eval "${rcvar}=\${${rcvar}:-'NO'}"
 
-ftbserver_start()
+<%= @ftb_name %>_start()
 {
 if [ -e ${ftb_server_home}/ftb_server.lck ]; then
         echo "Server already running."
 else
         echo "Starting ${ftb_server_name}..."
         cd ${ftb_server_home}
-        /usr/bin/su ${ftb_user} -c "/usr/local/bin/tmux new-session -d -s ftbserver \"./ServerStart.sh\"" || exit 5
+        /usr/bin/su ${ftb_user} -c "/usr/local/bin/tmux new-session -d -s <%= @ftb_name %> \"./ServerStart.sh\"" || exit 5
         touch ${ftb_server_home}/ftb_server.lck
 
         i=0
@@ -47,16 +47,16 @@ else
 
         if [ $i -ge 10 ]; then
                 echo "ERROR: Server could not be started."
-                /usr/bin/su ${ftb_user} -c "/usr/local/bin/tmux kill-session -t ftbserver"
+                /usr/bin/su ${ftb_user} -c "/usr/local/bin/tmux kill-session -t <%= @ftb_name %>"
                 exit 10
         fi
 fi
 }
 
-ftbserver_stop(){
+<%= @ftb_name %>_stop(){
 if [ -e ${ftb_server_home}/ftb_server.lck ]; then
         echo "Halting ${ftb_server_name}."
-        /usr/bin/su ${ftb_user} -c "/usr/local/bin/tmux send -t ftbserver:0.0 stop \"Enter\" && rm -f ${ftb_server_home}/ftb_server.lck"
+        /usr/bin/su ${ftb_user} -c "/usr/local/bin/tmux send -t <%= @ftb_name %>:0.0 stop \"Enter\" && rm -f ${ftb_server_home}/ftb_server.lck"
 
 
         i=0
@@ -79,9 +79,9 @@ else
 fi
 }
 
-ftbserver_clean(){
+<%= @ftb_name %>_clean(){
         echo "Giving a stop to the server..."
-        ftbserver_stop
+        <%= @ftb_name %>_stop
         echo "Cleaning..."
         if [ -e ${ftb_server_home}/ftb_server.lck ]; then
                 rm ${ftb_server_home}/ftb_server.lck
@@ -91,12 +91,12 @@ ftbserver_clean(){
         fi
 }
 
-ftbserver_restart() {
-        ftbserver_stop
+<%= @ftb_name %>_restart() {
+        <%= @ftb_name %>_stop
         sleep 5
-        ftbserver_clean
+        <%= @ftb_name %>_clean
         sleep 1
-        ftbserver_start
+        <%= @ftb_name %>_start
 }
 
 run_rc_command "$1"

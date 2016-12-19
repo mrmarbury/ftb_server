@@ -39,9 +39,11 @@ pack_version_server_dir = ::File.join pack_base_dir, pack_version_dir
 pack_server_link_dir = ::File.join pack_base_dir, install_base
 
 level_name = node['ftb_server']['server_properties']['level_name']
-init_script = '/usr/local/etc/rc.d/ftbserver'
 
-## These resources will be executed at compile time. So in a wrapper-Cookbook .Addons is present when needed
+rc_script = node['ftb_server']['rc_d']['name']
+init_script = ::File.join node['ftb_server']['rc_d']['dir'], rc_script
+
+## These resources will be executed at compile time. So in a wrapper-Cookbook .Addon is present when needed
 group ftb_group do
   action :nothing
 end.run_action :create
@@ -54,7 +56,7 @@ user ftb_user do
   action :nothing
 end.run_action :create
 
-[pack_version_server_dir, pack_addon_dir].each do |pdir|
+[pack_base_dir, pack_version_server_dir, pack_addon_dir].each do |pdir|
   directory pdir do
     owner ftb_user
     group ftb_group
@@ -80,6 +82,7 @@ template init_script do
   group 'wheel'
   mode '555'
   variables(
+      ftb_name: rc_script,
       ftb_server_home: pack_version_server_dir,
       ftb_server_name: pack_name,
       ftb_user: ftb_user,
@@ -132,7 +135,6 @@ end
 
 # Minecraft will escape characters like !, = etc in the motd so we might as well escape them here to prevent rewrite
 # of the config with every chef run (see motd)
-## INFO: No notifies restart on change here since server.properties is quite instable since Minecraft changes this file alot!!
 template ::File.join pack_version_server_dir, 'server.properties' do
   source 'server.properties.erb'
   user ftb_user
@@ -200,7 +202,6 @@ template ::File.join pack_version_server_dir, 'settings-local.sh' do
       permgen_size: node['ftb_server']['settings_local_sh']['permgen_size'],
       java_parameters: java_parameters
   )
-  notifies :restart, 'service[ftbserver]', :delayed
 end
 
 node['ftb_server']['addon_config']['files'].each do |file|
@@ -216,8 +217,7 @@ file ::File.join(pack_version_server_dir, 'ServerStart.sh') do
   mode '750'
 end
 
-service 'ftbserver' do
+service rc_script do
   supports start: true, stop: true, restart: true
-  action [:enable, :start]
-  only_if { node['ftb_server']['start_server'] }
+  action (node['ftb_server']['start_server'])? [:enable, :start] : [:disable]
 end

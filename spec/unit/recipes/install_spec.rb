@@ -76,6 +76,7 @@ describe 'ftb_server::install' do
           group: 'wheel',
           mode: '555',
           variables: ({
+              ftb_name: 'ftbserver',
               ftb_server_home: '/usr/local/ftb/FTBInfinityLite110/Server.1.3.3',
               ftb_server_name: 'FTBInfinityLite110',
               ftb_user: 'ftb',
@@ -179,7 +180,7 @@ describe 'ftb_server::install' do
       )
     end
 
-    it 'creates settings-local.sh file and notifies restart' do
+    it 'creates settings-local.sh file' do
       expect(chef_run).to create_template('/usr/local/ftb/FTBInfinityLite110/Server.1.3.3/settings-local.sh').with(
           source: 'settings-local.sh.erb',
           user: 'ftb',
@@ -194,7 +195,7 @@ describe 'ftb_server::install' do
                                ' -XX:MinHeapFreeRatio=5 -XX:MaxHeapFreeRatio=10 -Dmfl.queryRestult=confirm'
           })
       )
-      expect(chef_run.template('/usr/local/ftb/FTBInfinityLite110/Server.1.3.3/settings-local.sh')).to notify('service[ftbserver]').to(:restart).delayed
+      #expect(chef_run.template('/usr/local/ftb/FTBInfinityLite110/Server.1.3.3/settings-local.sh')).to notify('service[ftbserver]').to(:restart).delayed
     end
 
     %w( whitelist.json ops.json banned-ips.json banned-players.json ).each do |addon_file|

@@ -17,3 +17,20 @@
 # limitations under the License.
 
 include_recipe 'ftb_server::default'
+
+init_script = ::File.join node['ftb_server']['rc_d']['dir'], node['ftb_server']['rc_d']['name']
+cron_time = node['ftb_server']['auto_restart']['time']
+
+# We use onerestart here since this might me enabled, even if the service isn't
+cron 'ftbserver_auto_restart' do
+  command "#{init_script} onerestart"
+  weekday cron_time[:weekday]
+  month cron_time[:month]
+  day cron_time[:day]
+  hour cron_time[:hour]
+  minute cron_time[:minute]
+  time cron_time[:time]
+  user 'root'
+  shell '/bin/sh'
+  action (node['ftb_server']['auto_restart']['enable'])? :create : :delete
+end

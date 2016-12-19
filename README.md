@@ -68,6 +68,11 @@ no technical purpose in this Cookbook.
  - `node['ftb_server']['install_base']` - Base directory name for an installation. Default: `'Server'`
  - `node['ftb_server']['addon_dir']` - Name of the directory that will contain all symlinked files. Default: `'.Addon'`
  - `node['ftb_server']['start_server']` - Whether to enable and start the server or not. Default: `true`
+ 
+### rc-Script
+
+ - `node['ftb_server']['rc_d']['name']` - Name of the service. Default: `'ftbserver''`
+ - `node['ftb_server']['rc_d']['path']` - Path to the rc-script. Default: `'/usr/local/etc/rc.d'`
 
 ### User/Group
 
@@ -78,7 +83,9 @@ no technical purpose in this Cookbook.
 
 ### Addon Config
 
- - `node['ftb_server']['addon_config']['files']` - Array with the config files that will be symlinked to the current version's directory. Default: `%w( whitelist.json ops.json banned-ips.json banned-players.json )`
+ - `node['ftb_server']['addon_config']['files']` - Array with the config files that will be symlinked to the current version's directory.
+  Only files in that Array are symlinked. The reason for this is that this directory may contain other files you do not want to symlink.
+  Default: `%w( whitelist.json ops.json banned-ips.json banned-players.json )`
 
 ### eula.txt-File
 
@@ -172,7 +179,7 @@ values and a hint will be shown next to the attribute
  - `node['ftb_server']['auto_restart']['enable']` - It is a good idea to restart a Minecraft server in regular intervals. Setting this to `true` will create
   a cronjob that does exactly this. Default: `true`
  - `node['ftb_server']['auto_restart']['time']` - The time at which the server gets restarted. Default: `{ minute: '0', hour: '5' }`. 
- See Chef's [cron](https://docs.chef.io/resource_cron.html) resource for more info.
+ See Chef's [cron](https://docs.chef.io/resource_cron.html) resource for more info. Possible keys are: `:weekday, :month, :day, :hour, :minute, :time`
 
 ## Usage
 
