@@ -25,12 +25,31 @@ describe 'ftb_server::auto_restart' do
       runner = ChefSpec::ServerRunner.new(platform: 'freebsd', version: '10.3') do |node|
         node.automatic['ftb_server']['pack']['name'] = 'FTBInfinityLite110'
         node.automatic['ftb_server']['pack']['version'] = '1.3.3'
+        node.override['ftb_server']['auto_restart']['time'] = { minute: '1', hour: '2', day: '3', month: '4', weekday: '5', time: :daily }
       end
       runner.converge(described_recipe)
     end
 
     it 'converges successfully' do
       expect { chef_run }.to_not raise_error
+    end
+
+    it 'includes the default recipe' do
+      expect(chef_run).to include_recipe 'ftb_server::default'
+    end
+
+    it 'creates the cronjob' do
+      expect(chef_run).to create_cron('ftbserver_auto_restart').with(
+          minute: '1',
+          hour: '2',
+          day: '3',
+          month: '4',
+          weekday: '5',
+          time: :daily,
+          command: '/usr/local/etc/rc.d/ftbserver onerestart',
+          user: 'root',
+          shell: '/bin/sh'
+      )
     end
   end
 end
