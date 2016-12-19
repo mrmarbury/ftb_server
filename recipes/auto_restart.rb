@@ -21,7 +21,7 @@ include_recipe 'ftb_server::default'
 init_script = ::File.join node['ftb_server']['rc_d']['dir'], node['ftb_server']['rc_d']['name']
 cron_time = node['ftb_server']['auto_restart']['time']
 
-# We use onerestart here since this might me enabled, even if the service isn't
+# We use onerestart here since this might be enabled, even if the service isn't
 cron 'ftbserver_auto_restart' do
   command "#{init_script} onerestart"
   weekday cron_time[:weekday]
