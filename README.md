@@ -255,7 +255,7 @@ Installs and configures dynmap
 
 # Specs
 
-Run command `rspec` from the root of this Cookbooks
+Run command `rspec` from the root of this Cookbook
 
 # Integration tests
 
