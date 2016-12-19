@@ -9,4 +9,6 @@ source_url 'https://github.com/mrmarbury/ftb_server' if respond_to?(:source_url)
 
 version '0.9.0'
 
+supports 'freebsd', '>= 10.3'
+
 depends 'poise-archive', '~> 1.3.0'

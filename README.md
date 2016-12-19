@@ -2,7 +2,7 @@
 
 Chef Cookbook to manage a "Feed the Beast"-Server installation on FreeBSD.
 
-**INFO: - The Recipes `auto_restart` and `mod_dynmap` are currently WIP and will be available in ASAP!**
+**INFO: - The Recipe `mod_dynmap` is currently WIP and will be available when there is a Dynmap release for Minecraft Forge 1.10**
 
 ## Requirements
 
