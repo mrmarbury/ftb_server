@@ -253,11 +253,11 @@ Installs and configures dynmap
 
 ## How to Test
 
-# Specs
+### Specs
 
 Run command `rspec` from the root of this Cookbook
 
-# Integration tests
+### Integration tests
 
 **INFO: Not Yet Implementred**
 
