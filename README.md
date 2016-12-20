@@ -20,7 +20,7 @@ Chef Cookbook to manage a "Feed the Beast"-Server installation on FreeBSD.
  
 ## General Info On The How And Why
 
-The FTB-Server installation is devided into parts:
+The FTB-Server installation is devided into three parts:
 
  1. The user/group and its home-dir
  2. The FTB-Pack main directory and each version
@@ -71,7 +71,7 @@ no technical purpose in this Cookbook.
  
 ### rc-Script
 
- - `node['ftb_server']['rc_d']['name']` - Name of the service. Default: `'ftbserver''`
+ - `node['ftb_server']['rc_d']['name']` - Name of the service. Default: `'ftbserver'`
  - `node['ftb_server']['rc_d']['path']` - Path to the rc-script. Default: `'/usr/local/etc/rc.d'`
 
 ### User/Group
@@ -98,6 +98,7 @@ no technical purpose in this Cookbook.
  - `node['ftb_server']['settings_local_sh']['xmx']` - The Java XMX value. Default: `'5G'`
  - `node['ftb_server']['settings_local_sh']['permgen_size']` - Java's PermGen Size. Default: `'256M'`
  - `node['ftb_server']['settings_local_sh']['java_parameters']` - Array with Java parameters. Default: 
+ 
  ```
  %w(
     -XX:+UseParNewGC
@@ -254,7 +255,7 @@ Installs and configures dynmap
 
 # Specs
 
-Run command `rspec` from the root of this Cookbooks
+Run command `rspec` from the root of this Cookbook
 
 # Integration tests
 
