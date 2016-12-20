@@ -19,6 +19,11 @@
 require 'spec_helper'
 
 describe 'ftb_server::install' do
+
+  pack_base = '/usr/local/ftb/FTBInfinityLite110'
+  addon_dir = ::File.join pack_base, '.Addon'
+  server_version_dir = ::File.join pack_base, 'Server.1.3.3'
+
   context 'When all attributes are default' do
     let(:chef_run) do
       runner = ChefSpec::ServerRunner.new(platform: 'freebsd', version: '10.3') do |node|
@@ -37,7 +42,7 @@ describe 'ftb_server::install' do
     before :each do
       allow(::File).to receive(:exists?).and_call_original
       %w( whitelist.json ops.json banned-ips.json banned-players.json ).each do |addon_file|
-        allow(::File).to receive(:exists?).with("/usr/local/ftb/FTBInfinityLite110/.Addon/#{addon_file}").and_return true
+        allow(::File).to receive(:exists?).with(::File.join addon_dir, addon_file).and_return true
       end
     end
 
@@ -58,7 +63,7 @@ describe 'ftb_server::install' do
       ).at_compile_time
     end
 
-    %w( /usr/local/ftb/FTBInfinityLite110/Server.1.3.3 /usr/local/ftb/FTBInfinityLite110/.Addon ).each do |pdir|
+    [server_version_dir, addon_dir].each do |pdir|
       it "creates #{pdir} at compile time" do
         expect(chef_run).to create_directory(pdir).with(owner: 'ftb', group: 'ftb', recursive: true, mode: '750').at_compile_time
       end
@@ -77,7 +82,7 @@ describe 'ftb_server::install' do
           mode: '555',
           variables: ({
               ftb_name: 'ftbserver',
-              ftb_server_home: '/usr/local/ftb/FTBInfinityLite110/Server.1.3.3',
+              ftb_server_home: server_version_dir,
               ftb_server_name: 'FTBInfinityLite110',
               ftb_user: 'ftb',
               ftb_world_name: 'world'
@@ -86,13 +91,13 @@ describe 'ftb_server::install' do
     end
 
     it 'creates symlink to the current version' do
-      expect(chef_run).to create_link('/usr/local/ftb/FTBInfinityLite110/Server')
-                              .with_to '/usr/local/ftb/FTBInfinityLite110/Server.1.3.3'
+      expect(chef_run).to create_link(::File.join(pack_base, 'Server'))
+                              .with_to server_version_dir
     end
 
     %w( world backups ).each do |dir|
       it "creates Addon directory #{dir}" do
-        expect(chef_run).to create_directory('/usr/local/ftb/FTBInfinityLite110/.Addon/' + dir).with(
+        expect(chef_run).to create_directory(::File.join(addon_dir, dir)).with(
             owner: 'ftb',
             group: 'ftb',
             recursive: true,
@@ -101,15 +106,15 @@ describe 'ftb_server::install' do
       end
 
       it "creates symlink for dir #{dir}" do
-        expect(chef_run).to create_link('/usr/local/ftb/FTBInfinityLite110/Server.1.3.3/' + dir)
-                                .with_to('/usr/local/ftb/FTBInfinityLite110/.Addon/' + dir)
+        expect(chef_run).to create_link(::File.join(server_version_dir, dir))
+                                .with_to(::File.join(addon_dir, dir))
       end
     end
 
     it 'downloads and extracts the FTB-Modpack' do
       expect(chef_run).to(
           unpack_poise_archive('http://ftb.cursecdn.com/FTB2/modpacks/FTBInfinityLite110/1_3_3/FTBInfinityLite110Server.zip').with(
-              destination: '/usr/local/ftb/FTBInfinityLite110/Server.1.3.3',
+              destination: server_version_dir,
               user: 'ftb',
               group: 'ftb',
               keep_existing: true,
@@ -119,7 +124,7 @@ describe 'ftb_server::install' do
     end
 
     it 'creates the eula.txt file' do
-      expect(chef_run).to create_template('/usr/local/ftb/FTBInfinityLite110/Server.1.3.3/eula.txt').with(
+      expect(chef_run).to create_template(::File.join server_version_dir, '/eula.txt').with(
           source: 'eula.txt.erb',
           user: 'ftb',
           group: 'ftb',
@@ -131,7 +136,7 @@ describe 'ftb_server::install' do
     end
 
     it 'creates the server.properties file' do
-      expect(chef_run).to create_template('/usr/local/ftb/FTBInfinityLite110/Server.1.3.3/server.properties').with(
+      expect(chef_run).to create_template(::File.join server_version_dir, '/server.properties').with(
           source: 'server.properties.erb',
           user: 'ftb',
           group: 'ftb',
@@ -181,7 +186,7 @@ describe 'ftb_server::install' do
     end
 
     it 'creates settings-local.sh file' do
-      expect(chef_run).to create_template('/usr/local/ftb/FTBInfinityLite110/Server.1.3.3/settings-local.sh').with(
+      expect(chef_run).to create_template(::File.join server_version_dir, '/settings-local.sh').with(
           source: 'settings-local.sh.erb',
           user: 'ftb',
           group: 'ftb',
@@ -195,18 +200,18 @@ describe 'ftb_server::install' do
                                ' -XX:MinHeapFreeRatio=5 -XX:MaxHeapFreeRatio=10 -Dmfl.queryRestult=confirm'
           })
       )
-      #expect(chef_run.template('/usr/local/ftb/FTBInfinityLite110/Server.1.3.3/settings-local.sh')).to notify('service[ftbserver]').to(:restart).delayed
+      #expect(chef_run.template(::File.join server_version_dir, '/settings-local.sh')).to notify('service[ftbserver]').to(:restart).delayed
     end
 
     %w( whitelist.json ops.json banned-ips.json banned-players.json ).each do |addon_file|
       it "symlinks #{addon_file} to the server directory" do
-        expect(chef_run).to create_link("/usr/local/ftb/FTBInfinityLite110/Server.1.3.3/#{addon_file}")
-                                .with_to("/usr/local/ftb/FTBInfinityLite110/.Addon/#{addon_file}")
+        expect(chef_run).to create_link(::File.join(server_version_dir, addon_file))
+                                .with_to(::File.join(addon_dir, addon_file))
       end
     end
 
     it 'Makes ServerStart.sh executable' do
-      expect(chef_run).to create_file('/usr/local/ftb/FTBInfinityLite110/Server.1.3.3/ServerStart.sh').with_mode '750'
+      expect(chef_run).to create_file(::File.join server_version_dir, '/ServerStart.sh').with_mode '750'
     end
 
     it 'enables and starts ftbserver' do
