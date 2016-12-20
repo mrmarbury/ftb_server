@@ -48,7 +48,8 @@ describe 'ftb_server::auto_restart' do
           time: :daily,
           command: '/usr/local/etc/rc.d/ftbserver onerestart',
           user: 'root',
-          shell: '/bin/sh'
+          path: '/sbin:/bin:/usr/sbin:/usr/bin:/usr/games:/usr/local/sbin:/usr/local/bin:/root/bin',
+          shell: '/bin/csh'
       )
     end
   end

@@ -26,3 +26,8 @@
  - defaults-tests done
  - smaller fixes
  - settings-local.sh notify removed for now
+ 
+# 0.9.1
+
+ - set path and changed default shell to csh for auto_restart. That fixes the bug where FTB won't restart
+   when triggered via cronjob

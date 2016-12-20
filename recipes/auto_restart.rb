@@ -30,7 +30,8 @@ cron 'ftbserver_auto_restart' do
   hour cron_time[:hour]
   minute cron_time[:minute]
   time cron_time[:time]
+  path '/sbin:/bin:/usr/sbin:/usr/bin:/usr/games:/usr/local/sbin:/usr/local/bin:/root/bin'
   user 'root'
-  shell '/bin/sh'
+  shell '/bin/csh'
   action (node['ftb_server']['auto_restart']['enable'])? :create : :delete
 end
