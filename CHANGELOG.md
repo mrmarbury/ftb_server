@@ -37,3 +37,8 @@
  - trying more Xmx
  - some stubs for monit and mod_dynmap
  - some refinements and dependency updates
+
+# 0.10.0
+
+ - basic dynmap installation
+ - some refinements

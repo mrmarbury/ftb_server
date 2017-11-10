@@ -2,7 +2,7 @@
 # Cookbook:: ftb_server
 # Recipe:: mod_dynmap
 #
-# Copyright:: 2016, Stefan Wendler
+# Copyright:: 2017, Stefan Wendler
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,3 +17,26 @@
 # limitations under the License.
 
 include_recipe 'ftb_server::default'
+
+install_base = node['ftb_server']['install_base']
+
+pack_base_dir = node['ftb_server']['pack_base_dir']
+pack_version = node['ftb_server']['pack']['version']
+pack_version_dir = "#{install_base}.#{pack_version}"
+pack_version_server_dir = ::File.join pack_base_dir, pack_version_dir
+
+mods_dir = ::File.join pack_version_server_dir, 'mods'
+ftb_group = node['ftb_server']['user']['group']
+ftb_user = node['ftb_server']['user']['name']
+
+rc_script = node['ftb_server']['rc_d']['name']
+
+
+remote_file ::File.join mods_dir, 'dynmap.jar' do
+  source node['ftb_server']['mod_dynmap']['jar_url']
+  owner ftb_user
+  group ftb_group
+  mode '0644'
+  action :create
+  notifies :restart, "service[#{rc_script}]", :delayed if node['ftb_server']['mod_dynmap']['restart_on_update']
+end
