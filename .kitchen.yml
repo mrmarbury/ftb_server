@@ -24,8 +24,12 @@ platforms:
 suites:
   - name: default
     run_list:
-      - role[ftb]
+      - recipe[ftb_server::default]
     verifier:
       inspec_tests:
         - test/recipes
     attributes:
+      ftb_server:
+        pack:
+          name: "FTBInfinityLite110"
+          version: "1.4.1"

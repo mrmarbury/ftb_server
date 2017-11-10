@@ -31,3 +31,9 @@
 
  - set path and changed default shell to csh for auto_restart. That fixes the bug where FTB won't restart
    when triggered via cronjob
+
+# 0.9.2
+
+ - trying more Xmx
+ - some stubs for monit and mod_dynmap
+ - some refinements and dependency updates

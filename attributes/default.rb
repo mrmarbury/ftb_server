@@ -27,7 +27,7 @@ default['ftb_server']['eula']['do_accept'] = true
 
 default['ftb_server']['settings_local_sh']['java_cmd'] = 'java'
 default['ftb_server']['settings_local_sh']['xms'] = '2G'
-default['ftb_server']['settings_local_sh']['xmx'] = '5G'
+default['ftb_server']['settings_local_sh']['xmx'] = '8G'
 default['ftb_server']['settings_local_sh']['permgen_size'] = '256M'
 default['ftb_server']['settings_local_sh']['java_parameters'] = %w(
                                                                     -XX:+UseParNewGC
@@ -91,9 +91,6 @@ default['ftb_server']['pack']['name'] = nil
 default['ftb_server']['pack']['version'] = nil
 
 default['ftb_server']['start_server'] = true
-
-default['ftb_server']['mod_dynmap']['jar_url'] = 'http://addons.curse.cursecdn.com/files/2307/83/Dynmap-2.3-forge-1.9.4.jar' #(rename to dynmap.jar locally)
-#default['ftb_server']['mod_dynmap']['config'][<params>] - properties
 
 ## Set by Cookbook. Do NOT edit!
 default['ftb_server']['installed']['pack'] = nil

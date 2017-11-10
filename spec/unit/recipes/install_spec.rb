@@ -194,7 +194,7 @@ describe 'ftb_server::install' do
           variables: ({
               java_cmd: 'java',
               xms: '2G',
-              xmx: '5G',
+              xmx: '8G',
               permgen_size: '256M',
               java_parameters: '-XX:+UseParNewGC -XX:+CMSIncrementalPacing -XX:+CMSClassUnloadingEnabled -XX:ParallelGCThreads=2' \
                                ' -XX:MinHeapFreeRatio=5 -XX:MaxHeapFreeRatio=10 -Dmfl.queryRestult=confirm'
