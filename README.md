@@ -202,7 +202,7 @@ values and a hint will be shown next to the attribute
  
 ### In a wrapper-cookbook with managed JSON-Files
 
- - Put your JSON-Files into the files-directory of your wrapper cookbook
+ - Put your JSON-Files into the files-directory of your wrapper cookbook (See 'Addon Config' above for the default files that are configured in the array. Override for different files, if you know better)
  - Add the following to your wrapper Cookbooks `default.rb`
 
 ```ruby
