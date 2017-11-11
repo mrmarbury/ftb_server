@@ -23,6 +23,7 @@ describe 'ftb_server::mod_dynmap' do
 
   pack_base = '/usr/local/ftb/FTBInfinityLite110'
   server_version_dir = ::File.join pack_base, 'Server.1.3.3'
+  addon_dir = ::File.join pack_base, '.Addon'
   mods_dir = ::File.join server_version_dir, 'mods'
 
   context 'When all attributes are default' do
@@ -45,6 +46,20 @@ describe 'ftb_server::mod_dynmap' do
           group: 'ftb',
           mode: '0644',
       )
+    end
+
+    it "creates Addon directory for dynmap" do
+      expect(chef_run).to create_directory(::File.join(addon_dir, 'dynmap')).with(
+          owner: 'ftb',
+          group: 'ftb',
+          recursive: true,
+          mode: '750'
+      )
+    end
+
+    it "creates symlink for dir dynmap" do
+      expect(chef_run).to create_link(::File.join(server_version_dir, 'dynmap'))
+                              .with_to(::File.join(addon_dir, 'dynmap'))
     end
   end
 end

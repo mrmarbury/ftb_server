@@ -48,3 +48,7 @@
  - refinements on documentation
  - some tests
  - Since monit recipe is not working yet, it returns after printing an error
+ 
+# 0.10.2
+
+ - dynmap symlink was not created

@@ -24,6 +24,7 @@ pack_base_dir = node['ftb_server']['pack_base_dir']
 pack_version = node['ftb_server']['pack']['version']
 pack_version_dir = "#{install_base}.#{pack_version}"
 pack_version_server_dir = ::File.join pack_base_dir, pack_version_dir
+pack_addon_dir = node['ftb_server']['pack_addon_dir']
 
 mods_dir = ::File.join pack_version_server_dir, 'mods'
 ftb_group = node['ftb_server']['user']['group']
@@ -40,3 +41,17 @@ remote_file ::File.join mods_dir, 'dynmap.jar' do
   action :create
   notifies :restart, "service[#{rc_script}]", :delayed if node['ftb_server']['mod_dynmap']['restart_on_update']
 end
+
+dynmap_addon_path = ::File.join pack_addon_dir, 'dynmap'
+
+directory dynmap_addon_path do
+  owner ftb_user
+  group ftb_group
+  recursive true
+  mode '750'
+end
+
+link ::File.join pack_version_server_dir, 'dynmap' do
+  to dynmap_addon_path
+end
+
