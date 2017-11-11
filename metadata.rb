@@ -1,7 +1,7 @@
 name 'ftb_server'
 maintainer 'Stefan Wendler'
 maintainer_email 'stefan@binarysun.de'
-license 'apachev2'
+license 'Apache-2.0'
 description 'Installs/Configures a Feed the Beast Server on FreeBSD'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 issues_url 'https://github.com/mrmarbury/ftb_server/issues' if respond_to?(:issues_url)
