@@ -2,8 +2,6 @@
 
 Chef Cookbook to manage a "Feed the Beast"-Server installation on FreeBSD.
 
-**INFO: - The Recipe `mod_dynmap` is currently WIP and will be available when there is a Dynmap release for Minecraft Forge 1.10**
-
 ## Requirements
 
 ### Platforms
@@ -16,7 +14,8 @@ Chef Cookbook to manage a "Feed the Beast"-Server installation on FreeBSD.
  
 ### Dependent Cookbooks
 
- * poise_archive-1.3.0+
+ * poise_archive-1.5.0+
+ * poise-monit-1.6.0+
  
 ## General Info On The How And Why
 
@@ -95,7 +94,7 @@ no technical purpose in this Cookbook.
 
  - `node['ftb_server']['settings_local_sh']['java_cmd']` - The name of the java binary. Default: `'java'`
  - `node['ftb_server']['settings_local_sh']['xms']` - The Java XMS value. Default `'2G'`
- - `node['ftb_server']['settings_local_sh']['xmx']` - The Java XMX value. Default: `'5G'`
+ - `node['ftb_server']['settings_local_sh']['xmx']` - The Java XMX value. Default: `'8G'`
  - `node['ftb_server']['settings_local_sh']['permgen_size']` - Java's PermGen Size. Default: `'256M'`
  - `node['ftb_server']['settings_local_sh']['java_parameters']` - Array with Java parameters. Default: 
  
@@ -172,8 +171,8 @@ values and a hint will be shown next to the attribute
  
 ### mod_dynmap-Recipe
 
- - `node['ftb_server']['mod_dynmap']['jar_url']` - URL to the Forge Version of the Dynmap jar-file. Default: `''`
- - `node['ftb_server']['mod_dynmap']['config'][<params>]` - Properties in the Dynmap config file (TBD)
+ - `node['ftb_server']['mod_dynmap']['jar_url']` - URL to the Forge Version of the Dynmap jar-file. Default: `'https://addons-origin.cursecdn.com/files/2436/596/Dynmap-2.6-beta-1-forge-1.12.jar'`
+ - `node['ftb_server']['mod_dynmap']['restart_on_update']` - Set this to `true` to restart the server, when a new dynmap version has been installed. Default `false`
  
 ### auto_restart-Recipe
 
@@ -247,7 +246,9 @@ Creates a cronjob that restarts the server periodically, if `node['ftb_server'][
 
 ### ftb_server::mod_dynmap
 
-**INFO: Not Yet Implemented**
+Installs the dynmap plugin. 
+
+**INFO: WIP! It currently only puts the jar-file in place and triggers a restart of the server, if needed. There is no config yet**
 
 Installs and configures dynmap
 

@@ -20,6 +20,11 @@
 require 'spec_helper'
 
 describe 'ftb_server::mod_dynmap' do
+
+  pack_base = '/usr/local/ftb/FTBInfinityLite110'
+  server_version_dir = ::File.join pack_base, 'Server.1.3.3'
+  mods_dir = ::File.join server_version_dir, 'mods'
+
   context 'When all attributes are default' do
     let(:chef_run) do
       runner = ChefSpec::ServerRunner.new(platform: 'freebsd', version: '10.3') do |node|
@@ -31,6 +36,15 @@ describe 'ftb_server::mod_dynmap' do
 
     it 'converges successfully' do
       expect { chef_run }.to_not raise_error
+    end
+
+    it 'downloads dynmap and puts it into the mods directory' do
+      expect(chef_run).to create_remote_file(::File.join mods_dir, 'dynmap.jar').with(
+          source: 'https://addons-origin.cursecdn.com/files/2436/596/Dynmap-2.6-beta-1-forge-1.12.jar',
+          owner: 'ftb',
+          group: 'ftb',
+          mode: '0644',
+      )
     end
   end
 end

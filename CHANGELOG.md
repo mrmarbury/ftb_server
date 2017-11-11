@@ -42,3 +42,9 @@
 
  - basic dynmap installation
  - some refinements
+
+# 0.10.1
+
+ - refinements on documentation
+ - some tests
+ - Since monit recipe is not working yet, it returns after printing an error

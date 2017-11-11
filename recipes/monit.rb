@@ -16,6 +16,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+Chef::Log.error "Monit Recipe NOT WORKING YET!! Skipping ..."
+return
+
 attrs = node['ftbserver']['monit']
 
 include_recipe 'ftb_server::default'
