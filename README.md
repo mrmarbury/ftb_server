@@ -248,9 +248,7 @@ Creates a cronjob that restarts the server periodically, if `node['ftb_server'][
 
 Installs the dynmap plugin. 
 
-**INFO: WIP! It currently only puts the jar-file in place and triggers a restart of the server, if needed. There is no config yet**
-
-Installs and configures dynmap
+**INFO: WIP! It currently only puts the jar-file in place and triggers a restart of the server, if needed. There is no real config yet**
 
 ## How to Test
 
