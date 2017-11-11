@@ -52,3 +52,7 @@
 # 0.10.2
 
  - dynmap symlink was not created
+ 
+# 0.10.3
+
+ - basic dynmap configuration with webpage_title set to pack version and name

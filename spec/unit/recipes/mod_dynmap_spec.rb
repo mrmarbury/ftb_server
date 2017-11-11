@@ -48,8 +48,9 @@ describe 'ftb_server::mod_dynmap' do
       )
     end
 
+    dynmap_addon_dir = ::File.join(addon_dir, 'dynmap')
     it "creates Addon directory for dynmap" do
-      expect(chef_run).to create_directory(::File.join(addon_dir, 'dynmap')).with(
+      expect(chef_run).to create_directory(dynmap_addon_dir).with(
           owner: 'ftb',
           group: 'ftb',
           recursive: true,
@@ -59,7 +60,19 @@ describe 'ftb_server::mod_dynmap' do
 
     it "creates symlink for dir dynmap" do
       expect(chef_run).to create_link(::File.join(server_version_dir, 'dynmap'))
-                              .with_to(::File.join(addon_dir, 'dynmap'))
+                              .with_to(dynmap_addon_dir)
+    end
+
+    it 'creates the configuration.txt' do
+      expect(chef_run).to create_template(::File.join(dynmap_addon_dir, 'configuration.txt')).with(
+          source: 'configuration.txt.erb',
+          user: 'ftb',
+          group: 'ftb',
+          mode: '644',
+          variables: ({
+              webpage_title: 'v1.3.3 - FTBInfinityLite110',
+          })
+      )
     end
   end
 end

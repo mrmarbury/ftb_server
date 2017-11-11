@@ -26,12 +26,14 @@ pack_version_dir = "#{install_base}.#{pack_version}"
 pack_version_server_dir = ::File.join pack_base_dir, pack_version_dir
 pack_addon_dir = node['ftb_server']['pack_addon_dir']
 
+pack_version = node['ftb_server']['pack']['version']
+pack_name = node['ftb_server']['pack']['name']
+
 mods_dir = ::File.join pack_version_server_dir, 'mods'
 ftb_group = node['ftb_server']['user']['group']
 ftb_user = node['ftb_server']['user']['name']
 
 rc_script = node['ftb_server']['rc_d']['name']
-
 
 remote_file ::File.join mods_dir, 'dynmap.jar' do
   source node['ftb_server']['mod_dynmap']['jar_url']
@@ -53,5 +55,15 @@ end
 
 link ::File.join pack_version_server_dir, 'dynmap' do
   to dynmap_addon_path
+end
+
+template ::File.join dynmap_addon_path, 'configuration.txt' do
+  source 'configuration.txt.erb'
+  user ftb_user
+  group ftb_group
+  mode '644'
+  variables(
+      webpage_title: "v" + pack_version + " - " + pack_name,
+  )
 end
 
