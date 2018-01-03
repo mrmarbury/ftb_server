@@ -262,7 +262,7 @@ Run command `rspec` from the root of this Cookbook
 
  1. Install Vagrant with berkshelf and testkitchen plugins
  1. Install VirtualBox and configure it according to your OS's documentation
- 1. Run `kitchen verify`
+ 1. Run `kitchen test`
  
 ## License and Authors
 
