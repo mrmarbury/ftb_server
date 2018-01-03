@@ -197,7 +197,7 @@ describe 'ftb_server::install' do
               xmx: '8G',
               permgen_size: '256M',
               java_parameters: '-XX:+UseParNewGC -XX:+CMSIncrementalPacing -XX:+CMSClassUnloadingEnabled -XX:ParallelGCThreads=2' \
-                               ' -XX:MinHeapFreeRatio=5 -XX:MaxHeapFreeRatio=10 -Dmfl.queryRestult=confirm'
+                               ' -XX:MinHeapFreeRatio=5 -XX:MaxHeapFreeRatio=10 -Dmfl.queryResult=confirm'
           })
       )
       #expect(chef_run.template(::File.join server_version_dir, '/settings-local.sh')).to notify('service[ftbserver]').to(:restart).delayed

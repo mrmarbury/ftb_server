@@ -56,3 +56,7 @@
 # 0.10.3
 
  - basic dynmap configuration with webpage_title set to pack version and name
+
+# 0.10.4
+
+ - typo in flm Confirm Java option

@@ -33,7 +33,7 @@ default['ftb_server']['settings_local_sh']['java_parameters'] = %w(
 # if false, the server might not start because of changed blocks during version upgrade
 # you may leave this false but then you have to connect to the server console and /fml confirm manually
 default['ftb_server']['fml']['add_confirm_option'] = true
-default['ftb_server']['fml']['confirm_option'] = '-Dmfl.queryRestult=confirm'
+default['ftb_server']['fml']['confirm_option'] = '-Dmfl.queryResult=confirm'
 
 default['ftb_server']['server_properties']['spawn_protection'] = 16
 default['ftb_server']['server_properties']['max_tick_time'] = 60000

@@ -113,7 +113,7 @@ no technical purpose in this Cookbook.
 
  - `node['ftb_server']['fml']['add_confirm_option']` - Whether to confirm world/block-changes that might occur during server update. If this is `false` the server might not start and will wait for user interaction.
   Default: `true`
- - `node['ftb_server']['fml']['confirm_option']` - The Java parameter for FML-Confirm. Default: `'-Dmfl.queryRestult=confirm'`
+ - `node['ftb_server']['fml']['confirm_option']` - The Java parameter for FML-Confirm. Default: `'-Dmfl.queryResult=confirm'`
 
 ### server.properties-File
 
@@ -263,7 +263,7 @@ Run command `rspec` from the root of this Cookbook
  1. Install Vagrant with berkshelf and testkitchen plugins
  1. Install VirtualBox and configure it according to your OS's documentation
  1. Run `kitchen verify`
-
+ 
 ## License and Authors
 
 Author: Stefan Wendler (<stefan@binarysun.de>)
