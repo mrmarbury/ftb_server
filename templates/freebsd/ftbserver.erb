@@ -11,10 +11,9 @@ rcvar=<%= @ftb_name %>_enable
 
 load_rc_config $name
 
-extra_commands="clean restart"
+extra_commands="restart"
 start_cmd="${name}_start"
 stop_cmd="${name}_stop"
-clean_cmd="${name}_clean"
 restart_cmd="${name}_restart"
 
 ftb_server_home=<%= @ftb_server_home %>
@@ -24,78 +23,61 @@ ftb_world_name=<%= @ftb_world_name %>
 
 eval "${rcvar}=\${${rcvar}:-'NO'}"
 
-<%= @ftb_name %>_start()
-{
-if [ -e ${ftb_server_home}/ftb_server.lck ]; then
+<%= @ftb_name %>_start() {
+    if $(/usr/bin/su ${ftb_user} -c 'tmux has-session -t <%= @ftb_name %>'); then
         echo "Server already running."
-else
+    else
         echo "Starting ${ftb_server_name}..."
         cd ${ftb_server_home}
         /usr/bin/su ${ftb_user} -c "/usr/local/bin/tmux new-session -d -s <%= @ftb_name %> \"./ServerStart.sh\"" || exit 5
-        touch ${ftb_server_home}/ftb_server.lck
 
         i=0
         while [ $i -lt 15 ]; do
-                i=$(($i + 1))
-                if [ -e ${ftb_server_home}/ftb_server.lck ]; then
-                        echo "${ftb_server_name} running."
-                        break
-                else
-                        sleep 1
-                fi
+            i=$(($i + 1))
+            if $(/usr/bin/su ${ftb_user} -c 'tmux has-session -t <%= @ftb_name %>'); then
+                echo "${ftb_server_name} running."
+                break
+            else
+                sleep 1
+            fi
         done
 
         if [ $i -ge 10 ]; then
-                echo "ERROR: Server could not be started."
-                /usr/bin/su ${ftb_user} -c "/usr/local/bin/tmux kill-session -t <%= @ftb_name %>"
-                exit 10
+            echo "ERROR: Server could not be started."
+            /usr/bin/su ${ftb_user} -c "/usr/local/bin/tmux kill-session -t <%= @ftb_name %>"
+            exit 10
         fi
-fi
+    fi
 }
 
-<%= @ftb_name %>_stop(){
-if [ -e ${ftb_server_home}/ftb_server.lck ]; then
+<%= @ftb_name %>_stop() {
+    if $(/usr/bin/su ${ftb_user} -c 'tmux has-session -t <%= @ftb_name %>'); then
         echo "Halting ${ftb_server_name}."
-        /usr/bin/su ${ftb_user} -c "/usr/local/bin/tmux send -t <%= @ftb_name %>:0.0 stop \"Enter\" && rm -f ${ftb_server_home}/ftb_server.lck"
-
+        /usr/bin/su ${ftb_user} -c "/usr/local/bin/tmux send -t <%= @ftb_name %>:0.0 stop \"Enter\""
 
         i=0
         while [ $i -lt 15 ]; do
-        i=$(($i + 1))
-            if [ -e ${ftb_server_home}/ftb_server.lck ]; then
-                        sleep 1
+            i=$(($i + 1))
+            if $(/usr/bin/su ${ftb_user} -c 'tmux has-session -t <%= @ftb_name %>'); then
+                sleep 1
             else
-            echo "${ftb_server_name} halted."
-            break
+                echo "${ftb_server_name} halted."
+                break
             fi
         done
 
         if [ $i -ge 10 ];then
-                echo "ERROR: Server could not be halted."
-                exit 20
+            echo "ERROR: Server could not be halted."
+            exit 20
         fi
-else
+    else
         echo "${ftb_server_name} not running."
-fi
-}
-
-<%= @ftb_name %>_clean(){
-        echo "Giving a stop to the server..."
-        <%= @ftb_name %>_stop
-        echo "Cleaning..."
-        if [ -e ${ftb_server_home}/ftb_server.lck ]; then
-                rm ${ftb_server_home}/ftb_server.lck
-                echo "Cleaning done."
-        else
-                echo "Nothing to do. No unclean sessions."
-        fi
+    fi
 }
 
 <%= @ftb_name %>_restart() {
         <%= @ftb_name %>_stop
         sleep 5
-        <%= @ftb_name %>_clean
-        sleep 1
         <%= @ftb_name %>_start
 }
 

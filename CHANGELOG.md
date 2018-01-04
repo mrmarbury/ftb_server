@@ -60,3 +60,7 @@
 # 0.10.4
 
  - typo in flm Confirm Java option
+ 
+# 0.11.0 - 0.11.2
+
+ - rc script doesn't use lock file anymore but checks for the tmux session

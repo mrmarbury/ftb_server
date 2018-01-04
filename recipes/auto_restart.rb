@@ -23,7 +23,7 @@ cron_time = node['ftb_server']['auto_restart']['time']
 
 # We use onerestart here since this might be enabled, even if the service isn't
 cron 'ftbserver_auto_restart' do
-  command "#{init_script} onerestart"
+  command "#{init_script} onestop ; sleep 5 ; #{init_script} onestart"
   weekday cron_time[:weekday]
   month cron_time[:month]
   day cron_time[:day]
