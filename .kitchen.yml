@@ -22,7 +22,7 @@ platforms:
         memory: 5120
 
 suites:
-  - name: default
+  - name: default-ftb
     run_list:
       - recipe[ftb_server::default]
     verifier:
@@ -33,7 +33,7 @@ suites:
         pack:
           name: "FTBInfinityLite110"
           version: "1.4.1"
-  - name: with_map
+  - name: with_map-ftb
     run_list:
       - recipe[ftb_server::mod_dynmap]
     verifier:
@@ -44,3 +44,29 @@ suites:
         pack:
           name: "FTBHorizonsIII"
           version: "1.0.0"
+  - name: default-forge
+    run_list:
+      - recipe[ftb_server::default]
+    verifier:
+      inspec_tests:
+        - test/recipes
+    attributes:
+      ftb_server:
+        pack:
+          base_url: https://media.forgecdn.net/files/2700/952/PO3-3.0.40-SERVER.zip
+          name: "ProjectOzone3"
+          version: "3.0.40"
+          is_forge_pack: true
+  - name: with_map-forge
+    run_list:
+      - recipe[ftb_server::mod_dynmap]
+    verifier:
+      inspec_tests:
+        - test/recipes
+    attributes:
+      ftb_server:
+        pack:
+          base_url: https://media.forgecdn.net/files/2700/952/PO3-3.0.40-SERVER.zip
+          name: "ProjectOzone3"
+          version: "3.0.40"
+          is_forge_pack: true

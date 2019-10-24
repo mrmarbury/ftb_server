@@ -63,7 +63,6 @@ template ::File.join dynmap_addon_path, 'configuration.txt' do
   group ftb_group
   mode '644'
   variables(
-      webpage_title: "v" + pack_version + " - " + pack_name,
+    webpage_title: 'v' + pack_version + ' - ' + pack_name
   )
 end
-

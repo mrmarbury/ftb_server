@@ -35,8 +35,10 @@ pack_addon_dir = node['ftb_server']['pack_addon_dir']
 pack_version = node['ftb_server']['pack']['version']
 pack_version_dir = "#{install_base}.#{pack_version}"
 
-pack_version_server_dir = ::File.join pack_base_dir, pack_version_dir
-pack_server_link_dir = ::File.join pack_base_dir, install_base
+pack_version_server_dir = ::File.join(pack_base_dir, pack_version_dir)
+node.default['ftb_server']['pack_version_server_dir'] = pack_version_server_dir
+
+pack_server_link_dir = ::File.join(pack_base_dir, install_base)
 
 level_name = node['ftb_server']['server_properties']['level_name']
 
@@ -74,19 +76,21 @@ end
 
 execute 'send_stop_to_ftb_server_before_pack_update' do
   command "#{init_script} stop"
-  only_if { ::File.exists?(init_script) && ftb_is_upgradeable(pack_version, pack_server_link_dir)}
+  only_if { ::File.exist?(init_script) && ftb_is_upgradeable(pack_version, pack_server_link_dir) }
 end
 
+startup_script = node['ftb_server']['startup_script']
 template init_script do
   user 'root'
   group 'wheel'
   mode '555'
   variables(
-      ftb_name: rc_script,
-      ftb_server_home: pack_version_server_dir,
-      ftb_server_name: pack_name,
-      ftb_user: ftb_user,
-      ftb_world_name: level_name
+    ftb_name: rc_script,
+    ftb_server_home: pack_version_server_dir,
+    ftb_server_name: pack_name,
+    ftb_user: ftb_user,
+    ftb_world_name: level_name,
+    startup_script: startup_script
   )
 end
 
@@ -111,10 +115,17 @@ end
   end
 end
 
-pack_url = node['ftb_server']['pack']['base_url'] + '/' +
-           pack_name + '/' +
-           pack_version.tr('.', '_') + '/' +
-           pack_name + 'Server.zip'
+is_forge_pack = node['ftb_server']['pack']['is_forge_pack']
+
+pack_url = case is_forge_pack
+           when true
+             node['ftb_server']['pack']['base_url']
+           else
+             node['ftb_server']['pack']['base_url'] + '/' +
+             pack_name + '/' +
+             pack_version.tr('.', '_') + '/' +
+             pack_name + 'Server.zip'
+           end
 
 poise_archive pack_url do
   destination pack_version_server_dir
@@ -122,7 +133,7 @@ poise_archive pack_url do
   group ftb_group
   keep_existing true
   strip_components 0
-  not_if { ::File.exists?(::File.join(pack_version_server_dir, 'ServerStart.sh')) }
+  not_if { ::File.exist?(::File.join(pack_version_server_dir, startup_script)) }
 end
 
 template ::File.join pack_version_server_dir, 'eula.txt' do
@@ -130,7 +141,7 @@ template ::File.join pack_version_server_dir, 'eula.txt' do
   user ftb_user
   group ftb_group
   mode '644'
-  variables( accept_eula: node['ftb_server']['eula']['do_accept'] )
+  variables(accept_eula: node['ftb_server']['eula']['do_accept'])
 end
 
 # Minecraft will escape characters like !, = etc in the motd so we might as well escape them here to prevent rewrite
@@ -141,53 +152,53 @@ template ::File.join pack_version_server_dir, 'server.properties' do
   group ftb_group
   mode '644'
   variables(
-      spawn_protection: node['ftb_server']['server_properties']['spawn_protection'],
-      max_tick_time: node['ftb_server']['server_properties']['max_tick_time'],
-      generator_settings: node['ftb_server']['server_properties']['generator_settings'],
-      force_gamemode: node['ftb_server']['server_properties']['force_gamemode'],
-      allow_nether: node['ftb_server']['server_properties']['allow_nether'],
-      gamemode: node['ftb_server']['server_properties']['gamemode'],
-      broadcast_console_to_ops: node['ftb_server']['server_properties']['broadcast_console_to_ops'],
-      enable_query: node['ftb_server']['server_properties']['enable_query'],
-      player_idle_timeout: node['ftb_server']['server_properties']['player_idle_timeout'],
-      difficulty: node['ftb_server']['server_properties']['difficulty'],
-      spawn_monsters: node['ftb_server']['server_properties']['spawn_monsters'],
-      op_permission_level: node['ftb_server']['server_properties']['op_permission_level'],
-      announce_player_achievements: node['ftb_server']['server_properties']['announce_player_achievements'],
-      pvp: node['ftb_server']['server_properties']['pvp'],
-      snooper_enabled: node['ftb_server']['server_properties']['snooper_enabled'],
-      level_type: node['ftb_server']['server_properties']['level_type'],
-      hardcore: node['ftb_server']['server_properties']['hardcore'],
-      enable_command_block: node['ftb_server']['server_properties']['enable_command_block'],
-      max_players: node['ftb_server']['server_properties']['max_players'],
-      network_compression_threshold: node['ftb_server']['server_properties']['network_compression_threshold'],
-      resource_pack_sha1: node['ftb_server']['server_properties']['resource_pack_sha1'],
-      max_world_size: node['ftb_server']['server_properties']['max_world_size'],
-      server_port: node['ftb_server']['server_properties']['server_port'],
-      texture_pack: node['ftb_server']['server_properties']['texture_pack'],
-      server_ip: node['ftb_server']['server_properties']['server_ip'],
-      spawn_npcs: node['ftb_server']['server_properties']['spawn_npcs'],
-      allow_flight: node['ftb_server']['server_properties']['allow_flight'],
-      level_name: level_name,
-      view_distance: node['ftb_server']['server_properties']['view_distance'],
-      resource_pack: node['ftb_server']['server_properties']['resource_pack'],
-      spawn_animals: node['ftb_server']['server_properties']['spawn_animals'],
-      white_list: node['ftb_server']['server_properties']['white_list'],
-      generate_structures: node['ftb_server']['server_properties']['generate_structures'],
-      online_mode: node['ftb_server']['server_properties']['online_mode'],
-      max_build_height: node['ftb_server']['server_properties']['max_build_height'],
-      level_seed: node['ftb_server']['server_properties']['level_seed'],
-      motd: "v#{pack_version} - #{pack_name} -\\=- #{node['ftb_server']['server_properties']['motd']}",
-      enable_rcon: node['ftb_server']['server_properties']['enable_rcon'],
-      additional_options: node['ftb_server']['server_properties']['additional_options']
+    spawn_protection: node['ftb_server']['server_properties']['spawn_protection'],
+    max_tick_time: node['ftb_server']['server_properties']['max_tick_time'],
+    generator_settings: node['ftb_server']['server_properties']['generator_settings'],
+    force_gamemode: node['ftb_server']['server_properties']['force_gamemode'],
+    allow_nether: node['ftb_server']['server_properties']['allow_nether'],
+    gamemode: node['ftb_server']['server_properties']['gamemode'],
+    broadcast_console_to_ops: node['ftb_server']['server_properties']['broadcast_console_to_ops'],
+    enable_query: node['ftb_server']['server_properties']['enable_query'],
+    player_idle_timeout: node['ftb_server']['server_properties']['player_idle_timeout'],
+    difficulty: node['ftb_server']['server_properties']['difficulty'],
+    spawn_monsters: node['ftb_server']['server_properties']['spawn_monsters'],
+    op_permission_level: node['ftb_server']['server_properties']['op_permission_level'],
+    announce_player_achievements: node['ftb_server']['server_properties']['announce_player_achievements'],
+    pvp: node['ftb_server']['server_properties']['pvp'],
+    snooper_enabled: node['ftb_server']['server_properties']['snooper_enabled'],
+    level_type: node['ftb_server']['server_properties']['level_type'],
+    hardcore: node['ftb_server']['server_properties']['hardcore'],
+    enable_command_block: node['ftb_server']['server_properties']['enable_command_block'],
+    max_players: node['ftb_server']['server_properties']['max_players'],
+    network_compression_threshold: node['ftb_server']['server_properties']['network_compression_threshold'],
+    resource_pack_sha1: node['ftb_server']['server_properties']['resource_pack_sha1'],
+    max_world_size: node['ftb_server']['server_properties']['max_world_size'],
+    server_port: node['ftb_server']['server_properties']['server_port'],
+    texture_pack: node['ftb_server']['server_properties']['texture_pack'],
+    server_ip: node['ftb_server']['server_properties']['server_ip'],
+    spawn_npcs: node['ftb_server']['server_properties']['spawn_npcs'],
+    allow_flight: node['ftb_server']['server_properties']['allow_flight'],
+    level_name: level_name,
+    view_distance: node['ftb_server']['server_properties']['view_distance'],
+    resource_pack: node['ftb_server']['server_properties']['resource_pack'],
+    spawn_animals: node['ftb_server']['server_properties']['spawn_animals'],
+    white_list: node['ftb_server']['server_properties']['white_list'],
+    generate_structures: node['ftb_server']['server_properties']['generate_structures'],
+    online_mode: node['ftb_server']['server_properties']['online_mode'],
+    max_build_height: node['ftb_server']['server_properties']['max_build_height'],
+    level_seed: node['ftb_server']['server_properties']['level_seed'],
+    motd: "v#{pack_version} - #{pack_name} -\\=- #{node['ftb_server']['server_properties']['motd']}",
+    enable_rcon: node['ftb_server']['server_properties']['enable_rcon'],
+    additional_options: node['ftb_server']['server_properties']['additional_options']
   )
 end
 
 java_parameters = case node['ftb_server']['fml']['add_confirm_option']
-                    when true
-                      "#{node['ftb_server']['settings_local_sh']['java_parameters'].join(' ')} #{node['ftb_server']['fml']['confirm_option']}"
-                    else
-                      node['ftb_server']['settings_local_sh']['java_parameters'].join ' '
+                  when true
+                    "#{node['ftb_server']['settings_local_sh']['java_parameters'].join(' ')} #{node['ftb_server']['fml']['confirm_option']}"
+                  else
+                    node['ftb_server']['settings_local_sh']['java_parameters'].join ' '
                   end
 
 template ::File.join pack_version_server_dir, 'settings-local.sh' do
@@ -196,11 +207,11 @@ template ::File.join pack_version_server_dir, 'settings-local.sh' do
   group ftb_group
   mode '750'
   variables(
-      java_cmd: node['ftb_server']['settings_local_sh']['java_cmd'],
-      xms: node['ftb_server']['settings_local_sh']['xms'],
-      xmx: node['ftb_server']['settings_local_sh']['xmx'],
-      permgen_size: node['ftb_server']['settings_local_sh']['permgen_size'],
-      java_parameters: java_parameters
+    java_cmd: node['ftb_server']['settings_local_sh']['java_cmd'],
+    xms: node['ftb_server']['settings_local_sh']['xms'],
+    xmx: node['ftb_server']['settings_local_sh']['xmx'],
+    permgen_size: node['ftb_server']['settings_local_sh']['permgen_size'],
+    java_parameters: java_parameters
   )
 end
 
@@ -208,16 +219,18 @@ node['ftb_server']['addon_config']['files'].each do |file|
   afile = ::File.join pack_addon_dir, file
   link ::File.join pack_version_server_dir, file do
     to afile
-    only_if { ::File.exists? afile }
+    only_if { ::File.exist? afile }
   end
 end
 
-## Making ServerStart.sh executable
-file ::File.join(pack_version_server_dir, 'ServerStart.sh') do
+## Making the startup script executable
+file ::File.join(pack_version_server_dir, startup_script) do
   mode '750'
+  not_if { is_forge_pack }
 end
 
 service rc_script do
   supports start: true, stop: true, restart: true
-  action (node['ftb_server']['start_server'])? [:enable, :start] : [:disable]
+  action node['ftb_server']['start_server'] ? [:enable, :start] : [:disable]
+  not_if { is_forge_pack }
 end

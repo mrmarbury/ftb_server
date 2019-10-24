@@ -29,7 +29,7 @@ eval "${rcvar}=\${${rcvar}:-'NO'}"
     else
         echo "Starting ${ftb_server_name}..."
         cd ${ftb_server_home}
-        /usr/bin/su ${ftb_user} -c "/usr/local/bin/tmux new-session -d -s <%= @ftb_name %> \"./ServerStart.sh\"" || exit 5
+        /usr/bin/su ${ftb_user} -c "/usr/local/bin/tmux new-session -d -s <%= @ftb_name %> \"./<%= @startup_script %>\"" || exit 5
 
         i=0
         while [ $i -lt 15 ]; do

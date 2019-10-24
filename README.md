@@ -1,5 +1,7 @@
 # ftb_server
 
+**INFO: This CB is in bad shape. It works but there are no tests and the README is outdated**
+
 Chef Cookbook to manage a "Feed the Beast"-Server installation on FreeBSD.
 
 ## Requirements
@@ -164,10 +166,11 @@ values and a hint will be shown next to the attribute
 
 ### Pack Related
 
- - `node['ftb_server']['pack']['base_url']` - Base URL where the FTB Server packs can be found. Default: `'http://ftb.cursecdn.com/FTB2/modpacks'`
- - `node['ftb_server']['pack']['name']` - FTB modpack name. Has to be equal to the packs subdirectory on the download server. Must be set on a role/environment. Default: `nil`
- - `node['ftb_server']['pack']['version']` - Version of the FTB modpack in the form `X.Y.Z`. Must be set in a role/environment. Default: `nil`
-
+ - `node['ftb_server']['pack']['base_url']` - Base URL where the FTB Server packs can be found. If a Forge pack is installed then this has to resemble the complete download URL where the downloaded file has a suffix like .zip. You also have to set the 'is_forge_pack'parameter to `true`. Default: `'http://ftb.cursecdn.com/FTB2/modpacks'`
+ - `node['ftb_server']['pack']['name']` - FTB modpack name. Has to be equal to the packs subdirectory on the download server. It is basically the FTB pack name without the spaces but in camel case. For example if the pack is named 'FTB Infinity Lite 110' then the name here has to be 'FTBInfinityLite110'.
+  If a Forge pack is installed then the parameter can be set to any name you like. Must be set on a role/environment. Default: `nil`
+ - `node['ftb_server']['pack']['version']` - Version of the FTB modpack in the form `X.Y.Z`. If you install a Forge pack then this value must match the version of the Forge Pack in the form `X.Y.Z.`. It is then still used to determine if the server is eligible for upgrade/downgrade. Must be set in a role/environment. Default: `nil`
+ - `node['ftb_server']['pack']['is_forge_pack']` - Set this to `true`, if you install a Forge pack instead of a FTB pack. The parameters for `base_url`, `name`, and `version` will the be treated differently. See above. Default: `false`
  
 ### mod_dynmap-Recipe
 

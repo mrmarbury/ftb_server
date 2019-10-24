@@ -16,11 +16,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 require 'spec_helper'
 
 describe 'ftb_server::mod_dynmap' do
-
   pack_base = '/usr/local/ftb/FTBInfinityLite110'
   server_version_dir = ::File.join pack_base, 'Server.1.3.3'
   addon_dir = ::File.join pack_base, '.Addon'
@@ -40,38 +38,38 @@ describe 'ftb_server::mod_dynmap' do
     end
 
     it 'downloads dynmap and puts it into the mods directory' do
-      expect(chef_run).to create_remote_file(::File.join mods_dir, 'dynmap.jar').with(
-          source: 'https://addons-origin.cursecdn.com/files/2436/596/Dynmap-2.6-beta-1-forge-1.12.jar',
-          owner: 'ftb',
-          group: 'ftb',
-          mode: '0644',
+      expect(chef_run).to create_remote_file(::File.join(mods_dir, 'dynmap.jar')).with(
+        source: 'https://addons-origin.cursecdn.com/files/2436/596/Dynmap-2.6-beta-1-forge-1.12.jar',
+        owner: 'ftb',
+        group: 'ftb',
+        mode: '0644'
       )
     end
 
     dynmap_addon_dir = ::File.join(addon_dir, 'dynmap')
-    it "creates Addon directory for dynmap" do
+    it 'creates Addon directory for dynmap' do
       expect(chef_run).to create_directory(dynmap_addon_dir).with(
-          owner: 'ftb',
-          group: 'ftb',
-          recursive: true,
-          mode: '750'
+        owner: 'ftb',
+        group: 'ftb',
+        recursive: true,
+        mode: '750'
       )
     end
 
-    it "creates symlink for dir dynmap" do
+    it 'creates symlink for dir dynmap' do
       expect(chef_run).to create_link(::File.join(server_version_dir, 'dynmap'))
-                              .with_to(dynmap_addon_dir)
+        .with_to(dynmap_addon_dir)
     end
 
     it 'creates the configuration.txt' do
       expect(chef_run).to create_template(::File.join(dynmap_addon_dir, 'configuration.txt')).with(
-          source: 'configuration.txt.erb',
-          user: 'ftb',
-          group: 'ftb',
-          mode: '644',
-          variables: ({
-              webpage_title: 'v1.3.3 - FTBInfinityLite110',
-          })
+        source: 'configuration.txt.erb',
+        user: 'ftb',
+        group: 'ftb',
+        mode: '644',
+        variables: {
+          webpage_title: 'v1.3.3 - FTBInfinityLite110',
+        }
       )
     end
   end

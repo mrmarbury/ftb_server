@@ -7,10 +7,10 @@ long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 issues_url 'https://github.com/mrmarbury/ftb_server/issues' if respond_to?(:issues_url)
 source_url 'https://github.com/mrmarbury/ftb_server' if respond_to?(:source_url)
 
-version '0.11.2'
+version '0.12.3'
 
-supports 'freebsd', '>= 10.3'
-chef_version '>= 12', '< 14'
+supports 'freebsd', '>= 12.0'
+chef_version '>= 12'
 
 depends 'poise-archive', '~> 1.5.0'
 depends 'poise-monit', '~> 1.6.0'

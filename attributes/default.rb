@@ -18,18 +18,20 @@ default['ftb_server']['addon_config']['files'] = %w( whitelist.json ops.json ban
 ## We have to accept the Minecraft eula to be able to start the FTB Server
 default['ftb_server']['eula']['do_accept'] = true
 
+default['ftb_server']['startup_script'] = 'ServerStart.sh'
+
 default['ftb_server']['settings_local_sh']['java_cmd'] = 'java'
 default['ftb_server']['settings_local_sh']['xms'] = '2G'
 default['ftb_server']['settings_local_sh']['xmx'] = '8G'
 default['ftb_server']['settings_local_sh']['permgen_size'] = '256M'
 default['ftb_server']['settings_local_sh']['java_parameters'] = %w(
-                                                                    -XX:+UseParNewGC
-                                                                    -XX:+CMSIncrementalPacing
-                                                                    -XX:+CMSClassUnloadingEnabled
-                                                                    -XX:ParallelGCThreads=2
-                                                                    -XX:MinHeapFreeRatio=5
-                                                                    -XX:MaxHeapFreeRatio=10
-                                                                  )
+  -XX:+UseParNewGC
+  -XX:+CMSIncrementalPacing
+  -XX:+CMSClassUnloadingEnabled
+  -XX:ParallelGCThreads=2
+  -XX:MinHeapFreeRatio=5
+  -XX:MaxHeapFreeRatio=10
+)
 # if false, the server might not start because of changed blocks during version upgrade
 # you may leave this false but then you have to connect to the server console and /fml confirm manually
 default['ftb_server']['fml']['add_confirm_option'] = true
@@ -79,9 +81,12 @@ default['ftb_server']['server_properties']['enable_rcon'] = false
 default['ftb_server']['server_properties']['additional_options'] = {}
 
 ## http://ftb.cursecdn.com/FTB2/modpacks/FTBInfinityLite110/1_3_3/FTBInfinityLite110Server.zip
-default['ftb_server']['pack']['base_url'] = 'http://ftb.cursecdn.com/FTB2/modpacks'
+## https://media.forgecdn.net/files/2700/952/PO3-3.0.40-SERVER.zip
+## https://minecraft.curseforge.com/projects/project-ozone-3-a-new-way-forward/files/2700952/download
+default['ftb_server']['pack']['base_url'] = 'http://files.universe'
 default['ftb_server']['pack']['name'] = nil
 default['ftb_server']['pack']['version'] = nil
+default['ftb_server']['pack']['is_forge_pack'] = false
 
 default['ftb_server']['start_server'] = true
 

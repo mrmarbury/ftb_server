@@ -5,4 +5,4 @@ default['ftb_server']['mod_dynmap']['jar_url'] = 'https://addons-origin.cursecdn
 default['ftb_server']['mod_dynmap']['restart_on_update'] = false
 
 ### Properties will be added later
-#default['ftb_server']['mod_dynmap']['config'][<params>] - properties
+# default['ftb_server']['mod_dynmap']['config'][<params>] - properties

@@ -64,3 +64,11 @@
 # 0.11.0 - 0.11.2
 
  - rc script doesn't use lock file anymore but checks for the tmux session
+
+# 0.12.0
+
+ - Generic Forge pack installable
+ 
+# 0.12.3
+
+ - Fixes

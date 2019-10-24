@@ -16,30 +16,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-Chef::Log.error "Monit Recipe NOT WORKING YET!! Skipping ..."
+Chef::Log.error 'Monit Recipe NOT WORKING YET!! Skipping ...'
 return
-
-attrs = node['ftbserver']['monit']
-
-include_recipe 'ftb_server::default'
-include_recipe 'poise_monit' if attrs['enable']
-
-monit_config 'mailconfig' do
-  content <<-EOH
-    SET MAILSERVER #{attrs['mail_server']}
-    SET ALERT #{attrs['mail_address']}
-  EOH
-  only_if { attrs['enable'] && attrs['do_mailconfig'] }
-end
-
-monit 'monit' do
-  daemon_interval attrs['daemon_interval']
-  event_slots attrs['event_slots']
-  httpd_port attrs['http_port']
-  httpd_username attrs['http_username']
-  httpd_password attrs['http_password']
-  action (attrs['enable']) ? [:enable, :start] : [:disable, :stop]
-end
-
-
-
+#
+# attrs = node['ftbserver']['monit']
+#
+# include_recipe 'ftb_server::default'
+# include_recipe 'poise_monit' if attrs['enable']
+#
+# monit_config 'mailconfig' do
+#   content <<-EOH
+#     SET MAILSERVER #{attrs['mail_server']}
+#     SET ALERT #{attrs['mail_address']}
+#   EOH
+#   only_if { attrs['enable'] && attrs['do_mailconfig'] }
+# end
+#
+# monit 'monit' do
+#   daemon_interval attrs['daemon_interval']
+#   event_slots attrs['event_slots']
+#   httpd_port attrs['http_port']
+#   httpd_username attrs['http_username']
+#   httpd_password attrs['http_password']
+#   action attrs['enable']  ? [:enable, :start] : [:disable, :stop]
+# end

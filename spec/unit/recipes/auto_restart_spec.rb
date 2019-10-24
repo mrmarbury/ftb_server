@@ -16,7 +16,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 require 'spec_helper'
 
 describe 'ftb_server::auto_restart' do
@@ -40,16 +39,16 @@ describe 'ftb_server::auto_restart' do
 
     it 'creates the cronjob' do
       expect(chef_run).to create_cron('ftbserver_auto_restart').with(
-          minute: '1',
-          hour: '2',
-          day: '3',
-          month: '4',
-          weekday: '5',
-          time: :daily,
-          command: '/usr/local/etc/rc.d/ftbserver onerestart',
-          user: 'root',
-          path: '/sbin:/bin:/usr/sbin:/usr/bin:/usr/games:/usr/local/sbin:/usr/local/bin:/root/bin',
-          shell: '/bin/csh'
+        minute: '1',
+        hour: '2',
+        day: '3',
+        month: '4',
+        weekday: '5',
+        time: :daily,
+        command: '/usr/local/etc/rc.d/ftbserver onerestart',
+        user: 'root',
+        path: '/sbin:/bin:/usr/sbin:/usr/bin:/usr/games:/usr/local/sbin:/usr/local/bin:/root/bin',
+        shell: '/bin/csh'
       )
     end
   end
